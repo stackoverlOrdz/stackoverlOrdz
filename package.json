@@ -5,7 +5,11 @@
   "main": "server.js",
   "scripts": {
     "test": "node server",
-    "start": "server.js"
+    "start": "app/server/server.js"
+  },
+  "engines": {
+    "node": "6.2.2",
+    "npm": "3.9.5"
   },
   "repository": {
     "type": "git",
