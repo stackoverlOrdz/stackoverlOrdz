@@ -1,0 +1,21 @@
+{
+  "name": "spark",
+  "description": "> \"Things are bound to ignite when sparks fly!\"",
+  "main": "server.js",
+  "authors": [
+    "stackoverlOrdz (andrew leonardi",
+    "bohee park",
+    "deniz tetik",
+    "rebecca gray)"
+  ],
+  "license": "ISC",
+  "homepage": "https://github.com/stackoverlOrdz/stackoverlOrdz",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
