@@ -22,10 +22,18 @@
   },
   "homepage": "https://github.com/stackoverlOrdz/stackoverlOrdz#readme",
   "dependencies": {
+    "body-parser": "^1.15.2",
     "bookshelf": "^0.10.0",
+    "consolidate": "^0.14.1",
     "express": "^4.14.0",
+    "express-session": "^1.14.0",
     "grunt": "^1.0.1",
-    "knex": "^0.11.7"
+    "knex": "^0.11.7",
+    "morgan": "^1.7.0",
+    "mustache": "^2.2.1",
+    "nodemon": "^1.9.2",
+    "passport": "^0.3.2",
+    "passport-facebook": "^2.1.1"
   },
   "devDependencies": {
     "grunt": "^1.0.1"
