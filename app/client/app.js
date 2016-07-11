@@ -1,18 +1,5 @@
-angular.module('spark', [
+var app = angular.module('spark', [
+  'sparkController',
   'ngRoute'
 ])
 
-.config(function($routeProvider, $httpProvider){
-  $routeProvider
-  .when('/', {
-    templateURL: '',
-    controller: ''
-  })
-  .when('', {
-    templateURL: '',
-    controller: ''
-  })
-  .otherwise({
-      redirectTo: '/index'
-    });
-});
