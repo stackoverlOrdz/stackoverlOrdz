@@ -5,7 +5,7 @@ var morgan = require('morgan');
 var bodyParser = require('body-parser');
 var engines = require('consolidate');
 var util = require('./util.js');
-// var userController = require('./userController.js');
+var userController = require('./userController.js');
 
 // 'passport and passport-facebook allow OAuth login'
 var passport = require('passport')
