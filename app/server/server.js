@@ -4,6 +4,7 @@ var session = require('express-session');
 var morgan = require('morgan');
 var bodyParser = require('body-parser');
 var engines = require('consolidate');
+var util = require('./util.js');
 
 
 // 'passport and passport-facebook allow OAuth login'
@@ -24,17 +25,11 @@ app.use(session({
 }));
 
 // Facebook OAuth
-
 passport.serializeUser(function(user, done) {
-  console.log("serializeUser", user.id);
   done(null, user.id);
 });
 
 passport.deserializeUser(function(id, done) {
-  // User.findById(id, function(err, user) {
-  //   done(err, user);
-  // });
-  console.log("deserializeUser", id);
   done(null, id);
 });
 
@@ -48,12 +43,12 @@ passport.use(new FacebookStrategy({
     profileFields: ['id', 'displayName', 'picture.type(large)', 'email', 'birthday', 'profileUrl', 'location', 'verified']
   },
   function(accessToken, refreshToken, profile, done) {
-    console.log('profile', profile._json);
+    var facebookData = util.processFacebookData(profile._json);
 
     // check if new user (db/mongoose check if exists by facebookID)
       // route to user page
     // else
-      // send facebook data (profile._json) to db
+      // send facebookData to db
       // route to survey
 
     done(null, profile);
@@ -69,7 +64,7 @@ app.get('/auth/facebook/callback',
     res.redirect('/');
   });
 
-app.get('/',function(req,res){
+app.get('/', function(req, res){
   if (req.session.passport && req.session.passport.user) {
     res.render('user');
   } else {
@@ -77,11 +72,11 @@ app.get('/',function(req,res){
   }
 });
 
-app.get('/login', function(req,res) {
+app.get('/login', function(req, res){
   res.redirect('/auth/facebook');
 });
 
-app.get('/*', function(req,res){
+app.get('/*', function(req, res){
   res.redirect('/');
 });
 
