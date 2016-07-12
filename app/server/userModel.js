@@ -1,11 +1,11 @@
 var mongoose = require ('mongoose');
 
-module.exports = {
+   var User;
   var initialize = function(){
 
       var userSchema = mongoose.Schema({
         //fbObj:object
-        name:string
+        name:String
       })
 
       //add methods for the User db to get and add info
@@ -13,12 +13,17 @@ module.exports = {
       userSchema.methods.greeting = function(){
         var greeting = this.name
            ? 'Hey ' + this.name
-           : 'You don't have a name';
+           : "You don't have a name";
         console.log(greeting)
       }
-  var Users = mongoose.model('Users', userSchema)
+
+
+  User = mongoose.model('Users', userSchema)
 
 }
-
+  module.exports = {
+    User: User,
+    initialize:initialize
+  }
 
 
