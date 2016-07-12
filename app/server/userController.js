@@ -8,8 +8,8 @@ var User = require('./userModel.js')
 
 module.exports = {
   signup: function(fbObj){
-    //var user = new User({ 'fbObj': fbObj})
-    var user = new User({'name':'Mary'})
+    var user = new User({ 'fbObj': fbObj})
+   // var user = new User({'name':'Mary'})
     user.save(function(err,user){
       if(err) return console.error(err);
     })
