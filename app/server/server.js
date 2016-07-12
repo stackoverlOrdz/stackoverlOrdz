@@ -1,14 +1,15 @@
-var express = require('express');
-var path = require('path');
-var session = require('express-session');
-var morgan = require('morgan');
 var bodyParser = require('body-parser');
 var engines = require('consolidate');
-var util = require('./util.js');
+var express = require('express');
 var mongoose = require ('mongoose');
-var userModel = require ('./userModel.js');
+var morgan = require('morgan');
 // 'passport and passport-facebook allow OAuth login'
 var passport = require('passport');
+var path = require('path');
+var session = require('express-session');
+var util = require('./util.js');
+var userModel = require ('./userModel.js');
+
 FacebookStrategy = require('passport-facebook').Strategy;
 
 var app = express();
@@ -21,7 +22,7 @@ app.engine('html', engines.mustache);
 app.set('view engine', 'html');
 
 app.use(session({
-    secret: 'blue flamingo'
+  secret: 'blue flamingo'
 }));
 
 // Facebook OAuth
@@ -81,7 +82,6 @@ done(null, profile);
  });
 
 var port = process.env.PORT || 3000;
-
 
 app.listen(port, function() {
   console.log('Listening on port ' + port);
