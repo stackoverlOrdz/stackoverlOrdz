@@ -105,6 +105,19 @@ app.get('/logout', function(req, res){
   res.redirect('/');
 });
 
+app.get('/signup', function(req, res){
+  // create new survey for new user
+});
+
+app.get('/survey', function(req, res) {
+  traitifyUtil.createAssessment("core");
+});
+
+app.get('/logout', function(req, res){
+  delete req.session.passport;
+  res.redirect('/');
+});
+
 app.get('/*', function(req, res){
   res.redirect('/');
 });
