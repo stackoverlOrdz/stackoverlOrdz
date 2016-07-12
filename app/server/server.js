@@ -1,20 +1,15 @@
 var express = require('express');
 var path = require('path');
-<<<<<<< HEAD
 var session = require('express-session');
 var morgan = require('morgan');
 var bodyParser = require('body-parser');
 var engines = require('consolidate');
 var util = require('./util.js');
-
-// 'passport and passport-facebook allow OAuth login'
-var passport = require('passport')
-FacebookStrategy = require('passport-facebook').Strategy;
-=======
 var mongoose = require ('mongoose');
-var userModel = require ('./userModel.js')
->>>>>>> 6722c9883482e292d1f4b233c725a5b52db83771
-
+var userModel = require ('./userModel.js');
+// 'passport and passport-facebook allow OAuth login'
+var passport = require('passport');
+FacebookStrategy = require('passport-facebook').Strategy;
 
 var app = express();
 
@@ -26,7 +21,7 @@ app.engine('html', engines.mustache);
 app.set('view engine', 'html');
 
 app.use(session({
-    secret: 'blue flamingo'
+    secret: 'blue flamingo';
 }));
 
 // Facebook OAuth
@@ -87,15 +82,10 @@ done(null, profile);
 
 var port = process.env.PORT || 3000;
 
-<<<<<<< HEAD
+
 app.listen(port, function() {
   console.log('Listening on port ' + port);
 });
-=======
-app.listen(port);
-console.log('Listening on port ' + port)
-
-
 
 //initialize the mongoose db server
 mongoose.connect('mongodb://sparkdb:spark@ds029328.mlab.com:29328/heroku_b7z7sd7t');
@@ -103,11 +93,7 @@ mongoose.connect('mongodb://sparkdb:spark@ds029328.mlab.com:29328/heroku_b7z7sd7
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function(){
-  console.log('connected')
+  console.log('connected');
 })
 
-userModel.initialize()
-
-
-
->>>>>>> 6722c9883482e292d1f4b233c725a5b52db83771
+userModel.initialize();
