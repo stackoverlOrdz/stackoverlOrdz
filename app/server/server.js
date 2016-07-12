@@ -21,7 +21,7 @@ app.engine('html', engines.mustache);
 app.set('view engine', 'html');
 
 app.use(session({
-    secret: 'blue flamingo';
+    secret: 'blue flamingo'
 }));
 
 // Facebook OAuth
