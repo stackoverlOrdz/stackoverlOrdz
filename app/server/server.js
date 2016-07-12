@@ -7,10 +7,12 @@ var morgan = require('morgan');
 var passport = require('passport');
 var path = require('path');
 var session = require('express-session');
-var util = require('./util.js');
 
 var userModel = require ('./userModel.js');
 var userController = require('./userController.js');
+
+var facebookUtil = require('./utilities/facebookUtil.js');
+var traitifyUtil = require('./utilities/traitifyUtil.js');
 
 var FacebookStrategy = require('passport-facebook').Strategy;
 
@@ -44,22 +46,22 @@ passport.use(new FacebookStrategy({
     clientSecret: '8a2911236f2e730fe93f84f060f38063',
     callbackURL: 'http://localhost:3000/auth/facebook/callback',
     profileFields: ['id', 'displayName', 'picture.type(large)', 'email', 'birthday', 'profileUrl', 'location', 'verified']
- },
- function(accessToken, refreshToken, profile, done) {
-   var facebookData = util.processFacebookData(profile._json);
+  },
+  function(accessToken, refreshToken, profile, done) {
+    var facebookData = facebookUtil.processFacebookData(profile._json);
 
     // check if new user (db/mongoose check if exists by facebookID)
-    userController.getUserStatus(facebookData.id, function(object) {
-      if (object.newUser) {
+    // userController.getUserStatus(facebookData.id, function(object) {
+      // if (object.newUser) {
         // create new survey
         // reroute to survey
-      } else if (object.existingUserUnfinishedSurvey) {
+      // } else if (object.existingUserUnfinishedSurvey) {
         // reroute to survey
-      } else if (object.existingUserFinishedSurvey) {
+      // } else if (object.existingUserFinishedSurvey) {
         // reroute to user landing
-      }
-      done(null, profile);
-    });
+      // }
+      // done(null, profile);
+    // });
       // route to user page
     // }else {
       // send facebookData to db
@@ -92,6 +94,10 @@ app.get('/', function(req, res){
 
 app.get('/signup', function(req, res){
   // create new survey for new user
+});
+
+app.get('/survey', function(req, res) {
+  traitifyUtil.createAssessment("core");
 });
 
 app.get('/logout', function(req, res){
