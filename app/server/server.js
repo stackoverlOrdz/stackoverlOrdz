@@ -4,8 +4,9 @@ var session = require('express-session');
 var morgan = require('morgan');
 var bodyParser = require('body-parser');
 var engines = require('consolidate');
-var util = require('./util.js');
-var userController = require('./userController.js');
+var facebookUtil = require('./utilities/facebookUtil.js');
+var traitifyUtil = require('./utilities/traitifyUtil.js');
+// var userController = require('./userController.js');
 
 // 'passport and passport-facebook allow OAuth login'
 var passport = require('passport')
@@ -43,20 +44,20 @@ passport.use(new FacebookStrategy({
     profileFields: ['id', 'displayName', 'picture.type(large)', 'email', 'birthday', 'profileUrl', 'location', 'verified']
   },
   function(accessToken, refreshToken, profile, done) {
-    var facebookData = util.processFacebookData(profile._json);
+    var facebookData = facebookUtil.processFacebookData(profile._json);
 
     // check if new user (db/mongoose check if exists by facebookID)
-    userController.getUserStatus(facebookData.id, function(object) {
-      if (object.newUser) {
+    // userController.getUserStatus(facebookData.id, function(object) {
+      // if (object.newUser) {
         // create new survey
         // reroute to survey
-      } else if (object.existingUserUnfinishedSurvey) {
+      // } else if (object.existingUserUnfinishedSurvey) {
         // reroute to survey
-      } else if (object.existingUserFinishedSurvey) {
+      // } else if (object.existingUserFinishedSurvey) {
         // reroute to user landing
-      }
-      done(null, profile);
-    });
+      // }
+      // done(null, profile);
+    // });
       // route to user page
     // }else {
       // send facebookData to db
@@ -89,6 +90,10 @@ app.get('/login', function(req, res){
 
 app.get('/signup', function(req, res){
   // create new survey for new user
+});
+
+app.get('/survey', function(req, res) {
+  traitifyUtil.createAssessment("core");
 });
 
 app.get('/logout', function(req, res){
