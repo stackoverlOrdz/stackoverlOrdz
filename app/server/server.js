@@ -8,10 +8,11 @@ var passport = require('passport');
 var path = require('path');
 var session = require('express-session');
 var util = require('./util.js');
+
 var userModel = require ('./userModel.js');
+var userController = require('./userController.js');
 
 var FacebookStrategy = require('passport-facebook').Strategy;
-var userController = require('./userController.js');
 
 var app = express();
 
