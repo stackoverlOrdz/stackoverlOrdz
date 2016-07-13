@@ -1,7 +1,7 @@
 var UserModel = require('./userModel.js')
 var db = require ('./server.js')
 var mongoose = require ('mongoose');
-
+var _  = require ('lodash')
 
 
 //add new user with facebook login data to the db Users to create a new user.
@@ -9,6 +9,10 @@ var mongoose = require ('mongoose');
 
 
   var currentUser;
+var gotNewUser = function(param){
+  console.log('gotNewUser', param)
+
+}
   var signup =  function(facebookObject, cb){
     var user = new UserModel.User({
      'facebookObject': facebookObject
@@ -19,7 +23,9 @@ var mongoose = require ('mongoose');
     } else {
       currentUser = user;
       console.log('u',user)
-      cb({'newUser': user})
+      //gotNewUser(user)
+      //console.log(cb)
+      cb(user)
     }
    })
   }
@@ -88,14 +94,10 @@ var mongoose = require ('mongoose');
     var  res = []
     for (var i=0;i<personality_types.length;i++){
       item = personality_types[i]
-      res.push(
-      {
-        personality_type:item.personality_type.name,
-        score:item.score
-      })
+      res.push(item.score)
     }
-    //[{personality_type:name,score:score}]
-    compareArray.push(res)
+
+    compareArray = res
 
     //to currentUser
       UserModel.User.findByIdAndUpdate(currentUser._id, {
@@ -139,23 +141,23 @@ var mongoose = require ('mongoose');
     //if existing user with survey data
     //>>query db for matches
     //cb {'existingUserSurveyComplete': matchQueryResultsObj}
-   UserModel.User.findOne(
-     {
-       'facebookObject.id':facebookId
-     },
+   UserModel.User.findOne({
+     'facebookObject': facebookObject
+   },
      function(err,currentUser){
-
+console.log('currentUser',currentUser)
      if (currentUser === null){
        //newUser because not in db
        //proced to signup if new User
-       signup(facebookObject, cb)
+       signup(facebookObject, function(err,res){
+         console.log('res',res)
+         cb({'newUser':res})
+       })
      } else
-     if (currentUser.testObject.testResults.length > 0){
-       //existingUserSurveyComplete
-       //get matches query results
-       //deck is variable.. setting to core default
+     if (currentUser.testObject.testResults.length === 0){
+       //existingUserUnfinshedSurvey
 
-       signup(facebookObject, cb)
+       cb({'existingUserUnfinshedSurvey':currentUser})
 
      }else
        if (currentUser.testObject.testResults.length > 0){
@@ -189,28 +191,3 @@ module.exports = {
   addTestData:addTestData,
   getUserStatus:getUserStatus
 }
-
-//this is the data structure
-// user1{_id:mongoID,fbObj:fObj,tObj:tObj}
-// user = {_id:mongoID,fbObj:fObj,tObj:tObj}
-
-// {
-//   _id:mongoId,
-
-// facebookObject: { 'facebookId': fbId,
-//  'name': userName,
-//  'picture': picUrl(will be pic file),
-//  'email': email,
-//  'birthday': birthday},
-
-// testObject:
-// {core:
-//   {uniqueTestId:id,testQuestions:[{testQs}], testResults: [{testResultsEntire}], compareArray:[score0,score1,score2,score3,score4,score5]},
-//   career:{...} }
-// }
-
-
-// SPARK at TRAITIFY
-
-// Public Key: sk3lsqhlktc4qtpe9n1qqucsuq
-// Secret Key: eehk5r98913mgc3ni8s73jkdq2
