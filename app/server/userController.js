@@ -1,21 +1,24 @@
-var mongoose = require ('mongoose');
-var User = require('./userModel.js')
+var UserModel = require('./userModel.js')
 var db = require ('./server.js')
+var mongoose = require ('mongoose');
+
 
 
 //add new user with facebook login data to the db Users to create a new user.
 //this is our login method and adds a unique id, username, picture, email, birthday and location within the user's facebookObject
 
 
-
+  var currentUser;
   var signup =  function(facebookObject, cb){
-    var user = new User({
+    var user = new UserModel.User({
      'facebookObject': facebookObject
    })
     user.save(function(err,user){
       if(err){
        return console.error('user signup ' + err);
     } else {
+      currentUser = user;
+      console.log('u',user)
       cb({'newUser': user})
     }
    })
@@ -23,7 +26,7 @@ var db = require ('./server.js')
   var queryMatches = function(currentUser,deck,cb){
     var currentUserScores = currentUser.testObject.deck.compareArray;
 
-      db.User.find().all(function(user){
+      UserModel.User.find().all(function(user){
         //forEach user in Users generate differences array with currentUser
 
         compareArray = user.testObject.deck.compareArray;
@@ -95,7 +98,7 @@ var db = require ('./server.js')
     compareArray.push(res)
 
     //to currentUser
-      db.User.findByIdAndUpdate(currentUser._id, {
+      UserModel.User.findByIdAndUpdate(currentUser._id, {
        $set:{
         'testObject.deck.testResults': testResults
       ,'testObject.deck.compareArray': compareArray
@@ -113,7 +116,7 @@ var db = require ('./server.js')
   var addTestObject = function(currentUser, deck, testQuestions, uniqueTestId, cb){
     //this adds the object and id used to present the survey
     //to the currentUser testObj under the deck name
-     db.User.findByIdAndUpdate(currentUser._id, {
+     UserModel.User.findByIdAndUpdate(currentUser._id, {
        $set: {
         'testObject.deck.testQuestions': testQuestions
       ,'testObject.deck.uniqueTestId' : uniqueTestId
@@ -129,7 +132,6 @@ var db = require ('./server.js')
   }
 
   var getUserStatus = function(facebookId, facebookObject, cb){
-console.log('getuserstatus ' + facebookId + ' ' + facebookObject)
     //this is the user routing function
 
     //if new user add to db & cb{'newUser':null}
@@ -137,25 +139,26 @@ console.log('getuserstatus ' + facebookId + ' ' + facebookObject)
     //if existing user with survey data
     //>>query db for matches
     //cb {'existingUserSurveyComplete': matchQueryResultsObj}
-
-   db.User.findOne(
+   UserModel.User.findOne(
      {
        'facebookObject.id':facebookId
      },
      function(err,currentUser){
-     if (err){
-       cb({'newUser':null})
-     }
-     if (currentUser.tObj.testResults.length > 0){
-       //existingUserSurveyComplete
-       //get matches query results
-       //deck is variable.. setting to core default
+
+     if (currentUser === null){
        //newUser because not in db
        //proced to signup if new User
        signup(facebookObject, cb)
+     } else
+     if (currentUser.testObject.testResults.length > 0){
+       //existingUserSurveyComplete
+       //get matches query results
+       //deck is variable.. setting to core default
 
-     }
-     if (currentUser.tObj.testResults.length > 0){
+       signup(facebookObject, cb)
+
+     }else
+       if (currentUser.testObject.testResults.length > 0){
 
        //existingUserSurveyComplete
        //get matches query results
@@ -178,7 +181,10 @@ console.log('getuserstatus ' + facebookId + ' ' + facebookObject)
      })
   }
 
+
+
 module.exports = {
+  currentUser:currentUser,
   addTestObject:addTestObject,
   addTestData:addTestData,
   getUserStatus:getUserStatus

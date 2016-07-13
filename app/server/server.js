@@ -1,7 +1,6 @@
 var bodyParser = require('body-parser');
 var engines = require('consolidate');
 var express = require('express');
-var mongoose = require ('mongoose');
 var morgan = require('morgan');
 // 'passport and passport-facebook allow OAuth login'
 var passport = require('passport');
@@ -10,6 +9,8 @@ var session = require('express-session');
 
 var userModel = require ('./userModel.js');
 var userController = require('./userController.js');
+var mongoose = require ('mongoose');
+
 
 var facebookUtil = require('./utilities/facebookUtil.js');
 var traitifyUtil = require('./utilities/traitifyUtil.js');
@@ -24,6 +25,16 @@ app.use(express.static(__dirname + '/../client'));
 app.use(session({
   secret: 'blue flamingo'
 }));
+
+//initialize the mongoose db server
+mongoose.connect('mongodb://sparkdb:spark@ds029328.mlab.com:29328/heroku_b7z7sd7t');
+
+var db = mongoose.connection;
+db.on('error', console.error.bind(console, 'connection error:'));
+db.once('open', function(){
+  console.log('connected');
+})
+
 
 // Facebook OAuth
 passport.serializeUser(function(user, done) {
@@ -128,13 +139,8 @@ app.listen(port, function() {
   console.log('Listening on port ' + port);
 });
 
-//initialize the mongoose db server
-mongoose.connect('mongodb://sparkdb:spark@ds029328.mlab.com:29328/heroku_b7z7sd7t');
 
-var db = mongoose.connection;
-db.on('error', console.error.bind(console, 'connection error:'));
-db.once('open', function(){
-  console.log('connected');
-})
 
-userModel.initialize();
+
+
+

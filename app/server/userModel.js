@@ -1,9 +1,6 @@
 var mongoose = require ('mongoose');
 
-  var User;
-  var initialize = function(){
-
-      var userSchema = mongoose.Schema({
+  var userSchema = mongoose.Schema({
         facebookObject:
         { facebookId: mongoose.Schema.Types.Mixed,
          name: String,
@@ -21,13 +18,10 @@ var mongoose = require ('mongoose');
        }
      })
 
+ var  User = mongoose.model('User', userSchema)
 
-  User = mongoose.model('Users', userSchema)
-
-}
   module.exports = {
-    User: User,
-    initialize:initialize
+    User: User
   }
 
 
