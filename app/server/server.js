@@ -20,11 +20,7 @@ var app = express();
 
 app.use(morgan('dev'));
 
-// directs app to static files and specifies view engine using 'consolidate' and 'mustache'
-app.set('views', __dirname + '/../client');
-app.engine('html', engines.mustache);
-app.set('view engine', 'html');
-
+app.use(express.static(__dirname + '/../client'));
 app.use(session({
   secret: 'blue flamingo'
 }));
@@ -60,7 +56,7 @@ passport.use(new FacebookStrategy({
       // } else if (object.existingUserFinishedSurvey) {
         // reroute to user landing
       // }
-      // done(null, profile);
+      done(null, profile);
     // });
       // route to user page
     // }else {
@@ -82,9 +78,11 @@ app.get('/auth/facebook/callback',
 
 app.get('/', function(req, res){
   if (req.session.passport && req.session.passport.user) {
-    res.render('user');
+    // res.render('user');
+    // send response that user is logged in
   } else {
-    res.render('index');
+    // res.sendFile(path.resolve(__dirname + '/../client/index.html'));
+    // render index
   }
 });
 
@@ -121,6 +119,7 @@ app.get('/logout', function(req, res){
 app.get('/*', function(req, res){
   res.redirect('/');
 });
+
 
 var port = process.env.PORT || 3000;
 
