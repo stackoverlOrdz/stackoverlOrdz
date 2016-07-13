@@ -88,7 +88,6 @@ angular.module('spark.controller', [])
 
 .controller('mainCtrl', function($scope){
   $scope.message = 'Made it to main view';
-
   $scope.data = {};
 
   $scope.getMatches = function(){
@@ -102,4 +101,3 @@ angular.module('spark.controller', [])
   };
   $scope.getMatches();
 });
-
