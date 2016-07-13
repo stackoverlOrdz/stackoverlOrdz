@@ -13,7 +13,7 @@ var mongoose = require ('mongoose');
 
 
 var facebookUtil = require('./utilities/facebookUtil.js');
-var traitifyUtil = require('./utilities/traitifyUtil.js');
+// var traitifyUtil = require('./utilities/traitifyUtils/traitifyUtil.js');
 
 var FacebookStrategy = require('passport-facebook').Strategy;
 
@@ -96,7 +96,7 @@ app.get('/', function(req, res){
 
  app.get('/login', function(req, res){
    console.log('Getting to /login get request')
-   res.redirect('/auth/facebook');
+   // res.redirect('/auth/facebook');
  });
 
 app.get('/signup', function(req, res){
@@ -129,4 +129,4 @@ db.once('open', function(){
   console.log('connected');
 });
 
-userModel.initialize();
+// userModel.initialize();
