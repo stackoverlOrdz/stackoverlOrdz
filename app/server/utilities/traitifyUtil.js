@@ -120,7 +120,8 @@ function getResults(assessmentId) {
 
     res.on('end', function() {
       body = JSON.parse(body);
-      // console.log("personality_types", body.personality_types);
+       console.log("personality_types", body.personality_types);
+       body.personality_types);
     });
   });
 
