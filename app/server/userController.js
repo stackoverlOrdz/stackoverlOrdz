@@ -8,11 +8,6 @@ var db = require ('./server.js')
 
 module.exports = {
   addTestData: function(currentUser, deck, testResults, cb){
-
-    //create compareArray & add it to data before inserting it
-    var compareArray = []
-
-
     //create compareArray & add it to data before inserting it
 
     var compareArray = []
@@ -29,12 +24,11 @@ module.exports = {
       res.push(
       {
         personality_type:item.personality_type.name,
-        score:item.score })
+        score:item.score
+      })
     }
     //[{personality_type:name,score:score}]
-
     compareArray.push(res)
-
 
     //to currentUser
       db.User.findByIdAndUpdate(currentUser._id, {
@@ -78,39 +72,6 @@ module.exports = {
 
         } else {
           cb('test questions added')
-        }
-      })
-  },
-  signup: function(facebookObject){
-    var user = new User({
-     'facebookObject': facebookObject
-   })
-   // var user = new User({'name':'Mary'})
-    user.save(function(err,user){
-      if(err) return console.error(err);
-    })
-  },
-  queryMatches(currentUser,deck,cb){
-    var currentUserScores = currentUser.testObject.deck.compareArray;
-    //forEach user in Users
-
-      db.User.find().all(function(user){
-
-      })
-
-
-    //test user test has results
-       //if has results, test scoreArray with fuzzy match
-       //add to matchesObject in order of scores difference
-       //may need intermediate object with keys of difference
-
-  },
-  getUserStatus: function(facebookId, cb){
-    //if new user return {'newUser':null}
-
-          cb(false)
-        } else {
-          cb(true)
         }
       })
   },
@@ -245,5 +206,10 @@ module.exports = {
 //   career:{...} }
 // }
 
+
+// SPARK at TRAITIFY
+
+// Public Key: sk3lsqhlktc4qtpe9n1qqucsuq
+// Secret Key: eehk5r98913mgc3ni8s73jkdq2
 
 
