@@ -62,7 +62,6 @@ app.get('/auth/facebook/callback',
     loginUtil.routeUser(facebookData, function(route, survey, user) {
       ////DO STUFF HERE
       // console.log("survey", survey);
-      // if (status == 'newSurveyCreated');
       if (route == 'survey') {
         console.log({route: route, data: survey, currentUser: user});
         res.send({route: route, data: survey, currentUser: user});
