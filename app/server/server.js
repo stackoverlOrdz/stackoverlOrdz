@@ -13,7 +13,9 @@ var mongoose = require ('mongoose');
 
 
 var facebookUtil = require('./utilities/facebookUtil.js');
-// var traitifyUtil = require('./utilities/traitifyUtils/traitifyUtil.js');
+var traitifyUtil = require('./utilities/traitifyUtils/traitifyUtil.js');
+var traitifyAPICalls = require('./utilities/traitifyUtils/traitifyAPICalls.js');
+var loginUtil = require('./utilities/loginUtil.js');
 
 var FacebookStrategy = require('passport-facebook').Strategy;
 
@@ -25,15 +27,6 @@ app.use(express.static(__dirname + '/../client'));
 app.use(session({
   secret: 'blue flamingo'
 }));
-
-//initialize the mongoose db server
-mongoose.connect('mongodb://sparkdb:spark@ds029328.mlab.com:29328/heroku_b7z7sd7t');
-
-var db = mongoose.connection;
-db.on('error', console.error.bind(console, 'connection error:'));
-db.once('open', function(){
-  console.log('connected');
-})
 
 
 // Facebook OAuth
@@ -55,23 +48,7 @@ passport.use(new FacebookStrategy({
     profileFields: ['id', 'displayName', 'picture.type(large)', 'email', 'birthday', 'profileUrl', 'location', 'verified']
   },
   function(accessToken, refreshToken, profile, done) {
-    var facebookData = facebookUtil.processFacebookData(profile._json);
-
-    // check if new user (db/mongoose check if exists by facebookID)
-    userController.getUserStatus(facebookData.id, facebookData, function(response) {
-      if (response.newUser) {
-        console.log("new user!");
-        // create new survey
-        // reroute to survey
-      } else if (response.existingUserUnfinishedSurvey) {
-        console.log("existing user, unfinished survey");
-        // reroute to survey
-      } else if (response.existingUserSurveyComplete) {
-        console.log("existing user, survey complete");
-        // reroute to user landing
-      }
-      done(null, profile);
-    });
+    done(null, profile);
   }
 ));
 
@@ -81,18 +58,19 @@ app.get('/auth/facebook',
 app.get('/auth/facebook/callback',
   passport.authenticate('facebook', { failureRedirect: '/login' }),
   function(req, res) {
-    res.redirect('/');
+    var facebookData = facebookUtil.processFacebookData(req.user._json);
+    loginUtil.routeUser(facebookData, function(route, survey, user) {
+      ////DO STUFF HERE
+      // console.log("survey", survey);
+      // if (status == 'newSurveyCreated');
+      if (route == 'survey') {
+        console.log({route: route, data: survey, currentUser: user});
+        res.send({route: route, data: survey, currentUser: user});
+      } else {
+        res.send('/');
+      }
+    });
   });
-
-app.get('/', function(req, res){
-  if (req.session.passport && req.session.passport.user) {
-    // res.render('user');
-    // send response that user is logged in
-  } else {
-    // res.sendFile(path.resolve(__dirname + '/../client/index.html'));
-    // render index
-  }
-});
 
  app.get('/login', function(req, res){
    console.log('Getting to /login get request')
@@ -126,7 +104,7 @@ app.listen(port, function() {
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function(){
-  console.log('connected');
+  // console.log('connected');
 });
 
 // userModel.initialize();
