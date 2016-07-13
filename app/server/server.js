@@ -58,23 +58,20 @@ passport.use(new FacebookStrategy({
     var facebookData = facebookUtil.processFacebookData(profile._json);
 
     // check if new user (db/mongoose check if exists by facebookID)
-    // userController.getUserStatus(facebookData.id, function(object) {
-      // if (object.newUser) {
+    userController.getUserStatus(facebookData.id, facebookData, function(response) {
+      if (response.newUser) {
+        console.log("new user!");
         // create new survey
         // reroute to survey
-      // } else if (object.existingUserUnfinishedSurvey) {
+      } else if (response.existingUserUnfinishedSurvey) {
+        console.log("existing user, unfinished survey");
         // reroute to survey
-      // } else if (object.existingUserFinishedSurvey) {
+      } else if (response.existingUserSurveyComplete) {
+        console.log("existing user, survey complete");
         // reroute to user landing
-      // }
+      }
       done(null, profile);
-    // });
-      // route to user page
-    // }else {
-      // send facebookData to db
-      // userController.signup(facebookData);
-      // route to survey
-    // }
+    });
   }
 ));
 
@@ -115,19 +112,6 @@ app.get('/logout', function(req, res){
   res.redirect('/');
 });
 
-app.get('/signup', function(req, res){
-  // create new survey for new user
-});
-
-app.get('/survey', function(req, res) {
-  traitifyUtil.createAssessment("core");
-});
-
-app.get('/logout', function(req, res){
-  delete req.session.passport;
-  res.redirect('/');
-});
-
 app.get('/*', function(req, res){
   res.redirect('/');
 });
@@ -139,8 +123,8 @@ app.listen(port, function() {
   console.log('Listening on port ' + port);
 });
 
-
-
-
-
-
+var db = mongoose.connection;
+db.on('error', console.error.bind(console, 'connection error:'));
+db.once('open', function(){
+  console.log('connected');
+});
