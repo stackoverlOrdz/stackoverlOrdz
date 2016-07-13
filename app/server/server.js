@@ -87,6 +87,7 @@ app.get('/', function(req, res){
 });
 
  app.get('/login', function(req, res){
+   console.log('Getting to /login get request')
    res.redirect('/auth/facebook');
  });
 
