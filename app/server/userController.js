@@ -1,7 +1,7 @@
 var UserModel = require('./userModel.js')
-var db = require ('./server.js')
+//var db = require ('./server.js')
 var mongoose = require ('mongoose');
-
+var _ = require('lodash')
 
 
 //add new user with facebook login data to the db Users to create a new user.
@@ -79,30 +79,17 @@ var mongoose = require ('mongoose');
     //create compareArray & add it to data before inserting it
     var compareArray = []
 
-    //fixed order for personality_type results
-    var fixedOrderOfResultsArray =
-    [
-    'Adventurous', 'Reliable', 'Charismatic', 'Mellow', 'Rational', 'Thoughtful', 'Social',
-    ]
-    // pull compare data from test object
-    var  res = []
-    for (var i=0;i<personality_types.length;i++){
-      item = personality_types[i]
-      res.push(
-      {
-        personality_type:item.personality_type.name,
-        score:item.score
-      })
+    for (var i=0;i<testResults.length;i++){
+      item = testResults[i]
+      compareArray.push(item.score)
     }
-    //[{personality_type:name,score:score}]
-    compareArray.push(res)
 
-    //to currentUser
-      UserModel.User.findByIdAndUpdate(currentUser._id, {
+      UserModel.User.findByIdAndUpdate(currentUser._id.oid, {
        $set:{
-        'testObject.deck.testResults': testResults
-      ,'testObject.deck.compareArray': compareArray
-    }},null,function(err,res){
+        'testObject.core.testResults': testResults
+      ,'testObject.core.compareArray': compareArray
+    }},function(err,res){
+
         if (err){
           console.error(err)
           cb(false)
@@ -116,10 +103,10 @@ var mongoose = require ('mongoose');
   var addTestObject = function(currentUser, deck, testQuestions, uniqueTestId, cb){
     //this adds the object and id used to present the survey
     //to the currentUser testObj under the deck name
-     UserModel.User.findByIdAndUpdate(currentUser._id, {
+     UserModel.User.findByIdAndUpdate(currentUser._id.oid, {
        $set: {
-        'testObject.deck.testQuestions': testQuestions
-      ,'testObject.deck.uniqueTestId' : uniqueTestId
+        'testObject.core.testQuestions': testQuestions
+      ,'testObject.core.uniqueTestId' : uniqueTestId
       }
     }, null,function(err,res){
         if (err){
@@ -150,12 +137,13 @@ var mongoose = require ('mongoose');
        //proced to signup if new User
        signup(facebookObject, cb)
      } else
-     if (currentUser.testObject.testResults.length > 0){
+     if (currentUser.testObject.testResults.length === 0){
        //existingUserSurveyComplete
        //get matches query results
        //deck is variable.. setting to core default
 
-       signup(facebookObject, cb)
+          //exitingUserUnfinishedSurvey
+       cb({'exitingUserUnfinishedSurvey':null})
 
      }else
        if (currentUser.testObject.testResults.length > 0){
