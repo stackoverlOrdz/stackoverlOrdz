@@ -7,10 +7,14 @@ var morgan = require('morgan');
 var passport = require('passport');
 var path = require('path');
 var session = require('express-session');
-var util = require('./util.js');
-var userModel = require ('./userModel.js');
 
-FacebookStrategy = require('passport-facebook').Strategy;
+var userModel = require ('./userModel.js');
+var userController = require('./userController.js');
+
+var facebookUtil = require('./utilities/facebookUtil.js');
+var traitifyUtil = require('./utilities/traitifyUtil.js');
+
+var FacebookStrategy = require('passport-facebook').Strategy;
 
 var app = express();
 
@@ -42,44 +46,81 @@ passport.use(new FacebookStrategy({
     clientSecret: '8a2911236f2e730fe93f84f060f38063',
     callbackURL: 'http://localhost:3000/auth/facebook/callback',
     profileFields: ['id', 'displayName', 'picture.type(large)', 'email', 'birthday', 'profileUrl', 'location', 'verified']
- },
- function(accessToken, refreshToken, profile, done) {
-   var facebookData = util.processFacebookData(profile._json);
+  },
+  function(accessToken, refreshToken, profile, done) {
+    var facebookData = facebookUtil.processFacebookData(profile._json);
 
     // check if new user (db/mongoose check if exists by facebookID)
+    // userController.getUserStatus(facebookData.id, function(object) {
+      // if (object.newUser) {
+        // create new survey
+        // reroute to survey
+      // } else if (object.existingUserUnfinishedSurvey) {
+        // reroute to survey
+      // } else if (object.existingUserFinishedSurvey) {
+        // reroute to user landing
+      // }
+      // done(null, profile);
+    // });
       // route to user page
-    // else
+    // }else {
       // send facebookData to db
+      // userController.signup(facebookData);
       // route to survey
+    // }
+  }
+));
 
-done(null, profile);
-   }
- ));
+app.get('/auth/facebook',
+  passport.authenticate('facebook', { scope: ['email', 'user_birthday', 'user_photos', 'user_location', 'public_profile']}));
 
- app.get('/auth/facebook',
-   passport.authenticate('facebook', { scope: ['email', 'user_birthday', 'user_photos', 'user_location', 'public_profile']}));
+app.get('/auth/facebook/callback',
+  passport.authenticate('facebook', { failureRedirect: '/login' }),
+  function(req, res) {
+    res.redirect('/');
+  });
 
- app.get('/auth/facebook/callback',
-   passport.authenticate('facebook', { failureRedirect: '/login' }),
-   function(req, res) {
-     res.redirect('/');
- });
-
- app.get('/', function(req, res){
-   if (req.session.passport && req.session.passport.user) {
-     res.render('user');
-   } else {
-     res.render('index');
-   }
- });
+app.get('/', function(req, res){
+  if (req.session.passport && req.session.passport.user) {
+    res.render('user');
+  } else {
+    res.render('index');
+  }
+});
 
  app.get('/login', function(req, res){
    res.redirect('/auth/facebook');
  });
 
- app.get('/*', function(req, res){
-   res.redirect('/');
- });
+app.get('/signup', function(req, res){
+  // create new survey for new user
+});
+
+app.get('/survey', function(req, res) {
+  traitifyUtil.createAssessment("core");
+});
+
+app.get('/logout', function(req, res){
+  delete req.session.passport;
+  res.redirect('/');
+});
+
+app.get('/signup', function(req, res){
+  // create new survey for new user
+});
+
+app.get('/survey', function(req, res) {
+  traitifyUtil.createAssessment("core");
+});
+
+app.get('/logout', function(req, res){
+  delete req.session.passport;
+  res.redirect('/');
+});
+
+app.get('/*', function(req, res){
+  res.redirect('/');
+});
 
 var port = process.env.PORT || 3000;
 
