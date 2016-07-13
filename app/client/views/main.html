@@ -1,0 +1,24 @@
+<div ng-controller="mainCtrl">
+
+  <p>{{message}}</p>
+
+  <h2>Hey {{ data.currentUser.name }}!</h2>
+
+  <div ng-repeat="match in data.matches">
+    <img src="{{ match.picture }}" />
+    <div class="info">
+        <div class="name">
+            {{ match.name }}
+        </div>
+        <div class="email">
+            {{ match.email }}
+        </div>
+        <div class="birthday">
+            {{ match.birthday }}
+        </div>
+        <div class="link">
+          {{ match.link }}
+        </div>
+    </div>
+  </div>
+</div>

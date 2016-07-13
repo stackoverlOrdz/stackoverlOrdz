@@ -88,5 +88,18 @@ angular.module('spark.controller', [])
 
 .controller('mainCtrl', function($scope){
   $scope.message = 'Made it to main view';
+
+  $scope.data = {};
+
+  $scope.getMatches = function(){
+    Matches.getAll()
+    .then(function(matches){
+      $scope.data = matches;
+    })
+    .catch(function(err){
+      console.error(err);
+    });
+  };
+  $scope.getMatches();
 });
 
