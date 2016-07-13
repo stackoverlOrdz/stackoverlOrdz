@@ -11,6 +11,14 @@ angular.module('spark', [
       templateUrl: 'views/register.html',
       controller: 'registerCtrl'
     })
+    .when('/survey', {
+      templateUrl: 'views/survey.html',
+      controller: 'surveyCtrl'
+    })
+    .when('/main', {
+      templateUrl: 'views/main.html',
+      controller: 'mainCtrl'
+    })
     .otherwise({
       redirectTo: '/register'
     });
