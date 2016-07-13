@@ -1,7 +1,7 @@
 var UserModel = require('./userModel.js')
-//var db = require ('./server.js')
+var db = require ('./server.js')
 var mongoose = require ('mongoose');
-var _ = require('lodash')
+var _  = require ('lodash')
 
 
 //add new user with facebook login data to the db Users to create a new user.
@@ -9,6 +9,10 @@ var _ = require('lodash')
 
 
   var currentUser;
+var gotNewUser = function(param){
+  console.log('gotNewUser', param)
+
+}
   var signup =  function(facebookObject, cb){
     var user = new UserModel.User({
      'facebookObject': facebookObject
@@ -19,6 +23,8 @@ var _ = require('lodash')
     } else {
       currentUser = user;
       console.log('u',user)
+      //gotNewUser(user)
+      //console.log(cb)
       cb({'newUser': user})
     }
    })
@@ -79,17 +85,26 @@ var _ = require('lodash')
     //create compareArray & add it to data before inserting it
     var compareArray = []
 
-    for (var i=0;i<testResults.length;i++){
-      item = testResults[i]
-      compareArray.push(item.score)
+    //fixed order for personality_type results
+    var fixedOrderOfResultsArray =
+    [
+    'Adventurous', 'Reliable', 'Charismatic', 'Mellow', 'Rational', 'Thoughtful', 'Social',
+    ]
+    // pull compare data from test object
+    var  res = []
+    for (var i=0;i<personality_types.length;i++){
+      item = personality_types[i]
+      res.push(item.score)
     }
 
-      UserModel.User.findByIdAndUpdate(currentUser._id.oid, {
-       $set:{
-        'testObject.core.testResults': testResults
-      ,'testObject.core.compareArray': compareArray
-    }},function(err,res){
+    compareArray = res
 
+    //to currentUser
+      UserModel.User.findByIdAndUpdate(currentUser._id, {
+       $set:{
+        'testObject.deck.testResults': testResults
+      ,'testObject.deck.compareArray': compareArray
+    }},null,function(err,res){
         if (err){
           console.error(err)
           cb(false)
@@ -103,10 +118,10 @@ var _ = require('lodash')
   var addTestObject = function(currentUser, deck, testQuestions, uniqueTestId, cb){
     //this adds the object and id used to present the survey
     //to the currentUser testObj under the deck name
-     UserModel.User.findByIdAndUpdate(currentUser._id.oid, {
+     UserModel.User.findByIdAndUpdate(currentUser._id, {
        $set: {
-        'testObject.core.testQuestions': testQuestions
-      ,'testObject.core.uniqueTestId' : uniqueTestId
+        'testObject.deck.testQuestions': testQuestions
+      ,'testObject.deck.uniqueTestId' : uniqueTestId
       }
     }, null,function(err,res){
         if (err){
@@ -126,24 +141,23 @@ var _ = require('lodash')
     //if existing user with survey data
     //>>query db for matches
     //cb {'existingUserSurveyComplete': matchQueryResultsObj}
-   UserModel.User.findOne(
-     {
-       'facebookObject.id':facebookId
-     },
+   UserModel.User.findOne({
+     'facebookObject': facebookObject
+   },
      function(err,currentUser){
-
+console.log('currentUser',currentUser)
      if (currentUser === null){
        //newUser because not in db
        //proced to signup if new User
-       signup(facebookObject, cb)
+       signup(facebookObject, function(err,res){
+         console.log('res',res)
+         cb(res)
+       })
      } else
      if (currentUser.testObject.testResults.length === 0){
-       //existingUserSurveyComplete
-       //get matches query results
-       //deck is variable.. setting to core default
+       //existingUserUnfinshedSurvey
 
-          //exitingUserUnfinishedSurvey
-       cb({'exitingUserUnfinishedSurvey':null})
+       cb({'existingUserUnfinshedSurvey':currentUser})
 
      }else
        if (currentUser.testObject.testResults.length > 0){
@@ -177,28 +191,3 @@ module.exports = {
   addTestData:addTestData,
   getUserStatus:getUserStatus
 }
-
-//this is the data structure
-// user1{_id:mongoID,fbObj:fObj,tObj:tObj}
-// user = {_id:mongoID,fbObj:fObj,tObj:tObj}
-
-// {
-//   _id:mongoId,
-
-// facebookObject: { 'facebookId': fbId,
-//  'name': userName,
-//  'picture': picUrl(will be pic file),
-//  'email': email,
-//  'birthday': birthday},
-
-// testObject:
-// {core:
-//   {uniqueTestId:id,testQuestions:[{testQs}], testResults: [{testResultsEntire}], compareArray:[score0,score1,score2,score3,score4,score5]},
-//   career:{...} }
-// }
-
-
-// SPARK at TRAITIFY
-
-// Public Key: sk3lsqhlktc4qtpe9n1qqucsuq
-// Secret Key: eehk5r98913mgc3ni8s73jkdq2
