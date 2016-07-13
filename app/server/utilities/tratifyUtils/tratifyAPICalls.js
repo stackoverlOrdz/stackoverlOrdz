@@ -1,26 +1,30 @@
-// var traitify = require('traitify');
-var http = require('http');
 var https = require('https');
-var _ = require('underscore');
-
-// traitify.setHost("https://api-sandbox.traitify.com");
-// traitify.setVersion("v1");
-// traitify.setSecretKey("eehk5r98913mgc3ni8s73jkdq2");
 
 var testResultsArray = [];
+
+var optionsTemplate = {
+  hostname: 'api.traitify.com',
+  path: '/v1/assessments',
+  headers: {
+    'Authorization': 'Basic eehk5r98913mgc3ni8s73jkdq2:x'
+  }
+}
 
 
 // exports.createAssessment = function(deckId) {
 function createAssessment(deckId) {
-  var options = {
-    hostname: 'api.traitify.com',
-    path: '/v1/assessments',
-    method: 'POST',
-    headers: {
-      'Authorization': 'Basic eehk5r98913mgc3ni8s73jkdq2:x',
-      'Content-Type': 'application/json'
-    }
-  };
+  // var options = {
+  //   hostname: 'api.traitify.com',
+  //   path: '/v1/assessments',
+  //   method: 'POST',
+  //   headers: {
+  //     'Authorization': 'Basic eehk5r98913mgc3ni8s73jkdq2:x',
+  //     'Content-Type': 'application/json'
+  //   }
+  // };
+  var options = optionsTemplate;
+  options.method = 'POST';
+  options.headers['Content-Type'] = 'application/json';
 
   var req = https.request(options, function(res) {
     res.on('data', function(body) {
@@ -131,6 +135,12 @@ function getResults(assessmentId) {
   req.end();
 }
 
+module.exports = {
+  createAssessment: createAssessment,
+  getAssessment: getAssessment,
+  testSubmitResults: testSubmitResults,
+  getResults: getResults
+}
 // createAssessment('core');
 // getAssessment('482ef9e1-486f-4a9b-97a6-467894c993ee');
 // testSubmitResults('482ef9e1-486f-4a9b-97a6-467894c993ee');
