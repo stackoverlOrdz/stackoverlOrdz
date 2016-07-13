@@ -20,11 +20,6 @@ var app = express();
 
 app.use(morgan('dev'));
 
-// directs app to static files and specifies view engine using 'consolidate' and 'mustache'
-// app.set('views', __dirname + '/../client');
-// app.engine('html', engines.mustache);
-// app.set('view engine', 'html');
-
 app.use(express.static(__dirname + '/../client'));
 app.use(session({
   secret: 'blue flamingo'
@@ -81,13 +76,15 @@ app.get('/auth/facebook/callback',
     res.redirect('/');
   });
 
-// app.get('/', function(req, res){
-//   // if (req.session.passport && req.session.passport.user) {
-//     // res.render('user');
-//   // } else {
-//     res.sendFile(path.resolve(__dirname + '/../client/index.html'));
-//   // }
-// });
+app.get('/', function(req, res){
+  if (req.session.passport && req.session.passport.user) {
+    // res.render('user');
+    // send response that user is logged in
+  } else {
+    // res.sendFile(path.resolve(__dirname + '/../client/index.html'));
+    // render index
+  }
+});
 
  app.get('/login', function(req, res){
    res.redirect('/auth/facebook');
@@ -119,13 +116,10 @@ app.get('/logout', function(req, res){
   res.redirect('/');
 });
 
-// app.get('/*', function(req, res){
-//   res.redirect('/');
-// });
-//
-app.get('*', function (req, res) {
-    res.sendFile(path.resolve(__dirname + '/../client/index.html'));
+app.get('/*', function(req, res){
+  res.redirect('/');
 });
+
 
 var port = process.env.PORT || 3000;
 
