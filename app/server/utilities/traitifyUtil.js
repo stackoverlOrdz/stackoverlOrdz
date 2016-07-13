@@ -120,7 +120,8 @@ function getResults(assessmentId) {
 
     res.on('end', function() {
       body = JSON.parse(body);
-      console.log("personality_types", body.personality_types);
+       console.log("personality_types", body.personality_types);
+       body.personality_types);
     });
   });
 
@@ -133,5 +134,5 @@ function getResults(assessmentId) {
 
 // createAssessment('core');
 // getAssessment('482ef9e1-486f-4a9b-97a6-467894c993ee');
-testSubmitResults('482ef9e1-486f-4a9b-97a6-467894c993ee');
+// testSubmitResults('482ef9e1-486f-4a9b-97a6-467894c993ee');
 // getResults('482ef9e1-486f-4a9b-97a6-467894c993ee');

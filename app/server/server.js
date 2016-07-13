@@ -1,7 +1,6 @@
 var bodyParser = require('body-parser');
 var engines = require('consolidate');
 var express = require('express');
-var mongoose = require ('mongoose');
 var morgan = require('morgan');
 // 'passport and passport-facebook allow OAuth login'
 var passport = require('passport');
@@ -10,6 +9,8 @@ var session = require('express-session');
 
 var userModel = require ('./userModel.js');
 var userController = require('./userController.js');
+var mongoose = require ('mongoose');
+
 
 var facebookUtil = require('./utilities/facebookUtil.js');
 var traitifyUtil = require('./utilities/traitifyUtil.js');
@@ -20,14 +21,20 @@ var app = express();
 
 app.use(morgan('dev'));
 
-// directs app to static files and specifies view engine using 'consolidate' and 'mustache'
-app.set('views', __dirname + '/../client');
-app.engine('html', engines.mustache);
-app.set('view engine', 'html');
-
+app.use(express.static(__dirname + '/../client'));
 app.use(session({
   secret: 'blue flamingo'
 }));
+
+//initialize the mongoose db server
+mongoose.connect('mongodb://sparkdb:spark@ds029328.mlab.com:29328/heroku_b7z7sd7t');
+
+var db = mongoose.connection;
+db.on('error', console.error.bind(console, 'connection error:'));
+db.once('open', function(){
+  console.log('connected');
+})
+
 
 // Facebook OAuth
 passport.serializeUser(function(user, done) {
@@ -60,7 +67,7 @@ passport.use(new FacebookStrategy({
       // } else if (object.existingUserFinishedSurvey) {
         // reroute to user landing
       // }
-      // done(null, profile);
+      done(null, profile);
     // });
       // route to user page
     // }else {
@@ -82,9 +89,11 @@ app.get('/auth/facebook/callback',
 
 app.get('/', function(req, res){
   if (req.session.passport && req.session.passport.user) {
-    res.render('user');
+    // res.render('user');
+    // send response that user is logged in
   } else {
-    res.render('index');
+    // res.sendFile(path.resolve(__dirname + '/../client/index.html'));
+    // render index
   }
 });
 
@@ -122,19 +131,15 @@ app.get('/*', function(req, res){
   res.redirect('/');
 });
 
+
 var port = process.env.PORT || 3000;
 
 app.listen(port, function() {
   console.log('Listening on port ' + port);
 });
 
-//initialize the mongoose db server
-mongoose.connect('mongodb://sparkdb:spark@ds029328.mlab.com:29328/heroku_b7z7sd7t');
 
-var db = mongoose.connection;
-db.on('error', console.error.bind(console, 'connection error:'));
-db.once('open', function(){
-  console.log('connected');
-})
 
-userModel.initialize();
+
+
+
