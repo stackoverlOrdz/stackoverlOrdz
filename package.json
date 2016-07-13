@@ -22,10 +22,7 @@
   },
   "homepage": "https://github.com/stackoverlOrdz/stackoverlOrdz#readme",
   "dependencies": {
-<<<<<<< HEAD
     "body": "^5.1.0",
-=======
->>>>>>> b707755754f7c2837d7655de4edf88a3bd627c9b
     "body-parser": "^1.15.2",
     "bookshelf": "^0.10.0",
     "consolidate": "^0.14.1",
@@ -33,12 +30,11 @@
     "express-session": "^1.14.0",
     "grunt": "^1.0.1",
     "knex": "^0.11.7",
-<<<<<<< HEAD
+    "lodash": "^4.13.1",
     "mongodb": "^2.2.1",
     "mongoose": "^4.5.3",
     "morgan": "^1.7.0",
-    "parser": "^0.1.4"
-=======
+    "parser": "^0.1.4",
     "morgan": "^1.7.0",
     "mustache": "^2.2.1",
     "nodemon": "^1.9.2",
@@ -46,7 +42,6 @@
     "passport-facebook": "^2.1.1",
     "traitify": "^2.2.0",
     "underscore": "^1.8.3"
->>>>>>> b707755754f7c2837d7655de4edf88a3bd627c9b
   },
   "devDependencies": {
     "grunt": "^1.0.1"
