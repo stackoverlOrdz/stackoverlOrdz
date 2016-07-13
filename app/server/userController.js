@@ -7,12 +7,14 @@ var db = require ('./server.js')
 //this is our login method and adds a unique id, username, picture, email, birthday and location within the user's facebookObject
 
 
+
   var signup =  function(facebookObject, cb){
     var user = new User({
      'facebookObject': facebookObject
    })
     user.save(function(err,user){
-      if(err) return console.error('user signup ' + err);
+      if(err){
+       return console.error('user signup ' + err);
     } else {
       cb({'newUser': user})
     }
@@ -29,7 +31,7 @@ var db = require ('./server.js')
 
         //find greatest difference between user scores
 
-        for var(i=0;i<compareArray.length;i++){
+        for(var i=0;i<compareArray.length;i++){
           difference = Math.abs(compareArray[i] - currentUserScores[i])
           if (difference > greatestDifference){
             greatestDifference = difference;
@@ -42,7 +44,7 @@ var db = require ('./server.js')
            {
              greatestDifference: greatestDifference, facebookObject: user.facebookObject
            })
-        }
+        })
 
         //sort the matches objet and return
         var resultsArray = _.orderBy(matches, ['greatestDifference', 'facebookObject'], ['desc'])
@@ -69,10 +71,9 @@ var db = require ('./server.js')
        //if additional tests are added, this will need to be developed further.
   }
 
-module.exports = {
-  addTestData: function(currentUser, deck, testResults, cb){
-    //create compareArray & add it to data before inserting it
 
+  var addTestData = function(currentUser, deck, testResults, cb){
+    //create compareArray & add it to data before inserting it
     var compareArray = []
 
     //fixed order for personality_type results
@@ -95,50 +96,40 @@ module.exports = {
 
     //to currentUser
       db.User.findByIdAndUpdate(currentUser._id, {
-       $set:
-       {
+       $set:{
         'testObject.deck.testResults': testResults
-      },
-      {
-        'testObject.deck.compareArray': compareArray
-      }
-    }, ,
-    function(err,res){
+      ,'testObject.deck.compareArray': compareArray
+    }},null,function(err,res){
         if (err){
           console.error(err)
-
-        } else {
-          cb('test results added')
-
           cb(false)
         } else {
           console.log('testResults and compare array added')
           cb(true)
-
         }
       })
-  },
-  addTestObject: function(currentUser, deck, testQuestions, uniqueTestId, cb){
+  }
+
+  var addTestObject = function(currentUser, deck, testQuestions, uniqueTestId, cb){
     //this adds the object and id used to present the survey
     //to the currentUser testObj under the deck name
      db.User.findByIdAndUpdate(currentUser._id, {
        $set: {
         'testObject.deck.testQuestions': testQuestions
-      },
-      {
-        'testObject.deck.uniqueTestId' : uniqueTestId
+      ,'testObject.deck.uniqueTestId' : uniqueTestId
       }
-    }, ,
-    function(err,res){
+    }, null,function(err,res){
         if (err){
           console.error(err)
-
+          cb(false)
         } else {
-          cb('test questions added')
+          cb(true)
         }
       })
-  },
-  getUserStatus: function(facebookId, facebookObject, cb){
+  }
+
+  var getUserStatus = function(facebookId, facebookObject, cb){
+console.log('getuserstatus ' + facebookId + ' ' + facebookObject)
     //this is the user routing function
 
     //if new user add to db & cb{'newUser':null}
@@ -187,6 +178,10 @@ module.exports = {
      })
   }
 
+module.exports = {
+  addTestObject:addTestObject,
+  addTestData:addTestData,
+  getUserStatus:getUserStatus
 }
 
 //this is the data structure
