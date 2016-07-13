@@ -12,7 +12,7 @@ var optionsTemplate = {
 
 
 // exports.createAssessment = function(deckId) {
-function createAssessment(deckId) {
+function createAssessment(deckId, callback) {
   // var options = {
   //   hostname: 'api.traitify.com',
   //   path: '/v1/assessments',
@@ -26,9 +26,21 @@ function createAssessment(deckId) {
   options.method = 'POST';
   options.headers['Content-Type'] = 'application/json';
 
+  var survey = '';
+
   var req = https.request(options, function(res) {
     res.on('data', function(body) {
-      // console.log('Body: ' + body);
+      survey += body;
+    });
+
+    res.on('end', function(body) {
+      console.log("createAssessment survey", survey);
+      // send survey object in callback
+      // e.g. survey
+      // {"id":"c3effb3f-a57d-4f2a-bbdf-fd0d242d6545",
+      // "deck_id":"core","tags":null,"completed_at":null,
+      // "created_at":1468444927272,"locale_key":"en-US"}
+      callback(survey);
     });
   });
 
@@ -41,7 +53,7 @@ function createAssessment(deckId) {
   req.end();
 }
 
-function getAssessment(assessmentId) {
+function getAssessment(assessmentId, callback) {
   var body = '';
 
   var options = {
@@ -60,15 +72,18 @@ function getAssessment(assessmentId) {
 
     res.on('end', function() {
       body = JSON.parse(body);
-      body.forEach(function(item) {
-        var testResult = {};
-        testResult.id = item.id;
-        testResult.response = Boolean(Math.round(Math.random()));
-        testResult.time_taken = 1000;
-        testResultsArray.push(testResult);
-      });
-      console.log(testResultsArray);
-      testSubmitResults(assessmentId);
+
+      /// FOR TESTING ONLY ////
+      // body.forEach(function(item) {
+      //   var testResult = {};
+      //   testResult.id = item.id;
+      //   testResult.response = Boolean(Math.round(Math.random()));
+      //   testResult.time_taken = 1000;
+      //   testResultsArray.push(testResult);
+      // });
+      // console.log(testResultsArray);
+      callback(body);
+      // testSubmitResults(assessmentId);
     });
   });
 
@@ -96,7 +111,7 @@ function testSubmitResults(assessmentId) {
       // console.log('Body: ' + body);
     });
     res.on('end', function() {
-      console.log
+      // console.log
       getResults(assessmentId);
     });
   });
@@ -124,8 +139,7 @@ function getResults(assessmentId) {
 
     res.on('end', function() {
       body = JSON.parse(body);
-       console.log("personality_types", body.personality_types);
-       body.personality_types);
+      //  console.log("personality_types", body.personality_types);
     });
   });
 
