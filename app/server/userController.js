@@ -25,7 +25,7 @@ var gotNewUser = function(param){
       console.log('u',user)
       //gotNewUser(user)
       //console.log(cb)
-      cb({'newUser': user})
+      cb(user)
     }
    })
   }
@@ -151,7 +151,7 @@ console.log('currentUser',currentUser)
        //proced to signup if new User
        signup(facebookObject, function(err,res){
          console.log('res',res)
-         cb(res)
+         cb({'newUser':res})
        })
      } else
      if (currentUser.testObject.testResults.length === 0){
