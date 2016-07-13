@@ -34,7 +34,7 @@
     "mongodb": "^2.2.1",
     "mongoose": "^4.5.3",
     "morgan": "^1.7.0",
-    "parser": "^0.1.4"
+    "parser": "^0.1.4",
     "morgan": "^1.7.0",
     "mustache": "^2.2.1",
     "nodemon": "^1.9.2",
