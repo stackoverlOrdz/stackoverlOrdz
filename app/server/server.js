@@ -73,7 +73,7 @@ app.get('/auth/facebook/callback',
 
  app.get('/login', function(req, res){
    console.log('Getting to /login get request')
-   // res.redirect('/auth/facebook');
+   res.redirect('/auth/facebook');
  });
 
 app.get('/signup', function(req, res){
