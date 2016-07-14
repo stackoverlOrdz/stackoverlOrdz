@@ -59,16 +59,17 @@ var gotNewUser = function(param){
         var resultsArray = _.orderBy(matches, ['greatestDifference', 'facebookObject'], ['desc'])
         // returns → objects for [[36, fbobj], [34, fbobj]]
 
-        //return  {currentUser:{fbObj},matches: [ fbObj , fbObj , fbObj ] }
+        //return  {currentUser:{fbObj},data: [ fbObj , fbObj , fbObj ] }
         var matchesObjet =
         {
           'currentUser': user.facebookObject,
-          'matches': null
+          'data': null
         }
         matches = []
         for (var i=0;i<resultsArray.length;i++){
           matches.push(resultsArray[i][1])
         }
+        matchesObject.data = matches;
         cb(matchesObject)
 
     //test user test has results
@@ -145,13 +146,13 @@ var gotNewUser = function(param){
      'facebookObject': facebookObject
    },
      function(err,currentUser){
-console.log('currentUser',currentUser)
+//console.log('currentUser',currentUser)
      if (currentUser === null){
        //newUser because not in db
        //proced to signup if new User
        signup(facebookObject, function(err,res){
-         console.log('res',res)
-         cb({'newUser':res})
+      //   console.log('res',res)
+         cb({'newUser': {route:'survey',data:[],currentUser:currentUser}})
        })
      } else
      if (currentUser.testObject.core.testResults === []){
@@ -173,12 +174,12 @@ console.log('has test results')
          if (err){
            console.error(err)
          } else {
-           cb({'existingUserSurveyComplete':matches})
+           cb({'existingUserSurveyComplete':{route:'matches',data:matches,currentUser:currentUser}})
          }
        })
      } else {
        //exitingUserUnfinishedSurvey
-       cb({'exitingUserUnfinishedSurvey':currentUser})
+       cb({'newUser':currentUser})
      }
      })
   }
