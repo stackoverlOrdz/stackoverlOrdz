@@ -50,3 +50,20 @@ angular.module('spark.factory', [])
   }
 })
 
+.factory('mainFactory', function ($http) {
+
+  var getRequest = function(){
+    return $http({
+      method: 'GET',
+      url: '/survey',
+      }).then(function successCallback(response) {
+        return response.data;
+      }, function errorCallback(response) {
+        console.log("Get request error!");
+      });
+  }
+
+  return {
+    getRequest: getRequest
+  }
+})
