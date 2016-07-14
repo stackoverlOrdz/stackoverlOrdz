@@ -72,22 +72,26 @@ passport.use(new FacebookStrategy({
 ));
 
 
-  app.get('/auth/facebook?', passport.authenticate('facebook', { scope: ['email', 'user_birthday', 'user_photos', 'user_location', 'public_profile']}));
+  app.get('/auth/facebook', passport.authenticate('facebook', { scope: ['email', 'user_birthday', 'user_photos', 'user_location', 'public_profile']}));
 
 
 
 app.get('/auth/facebook/callback',
   passport.authenticate('facebook', { failureRedirect: '/login' }),
-  function(req, res) { console.log('+++ line 69 in auth callback')
+  function(req, res) {
     var facebookData = facebookUtil.processFacebookData(req.user._json);
-    loginUtil.routeUser(facebookData, function(route, survey, user) {
+    loginUtil.routeUser(facebookData, function(response) {
       ////DO STUFF HERE
-     console.log("survey", survey);
+    // console.log("survey", survey);
+    var route = response.route
+    var data = response //JSON.stringify(response)
       if (route == 'survey') {
-        console.log({route: route, data: survey, currentUser: user});
-        res.send({route: route, data: survey, currentUser: user});
-      } else {
-        res.send('/');
+        //console.log({route: route, data: survey, currentUser: user});
+
+        res.redirect('/showSurvey?data=' + data);
+      } else if (route == 'matches'){
+        res.redirect('/showMatches?data=' + data);
+        //res.send('/');
       }
     });
   });
@@ -100,10 +104,13 @@ app.get('/auth/facebook/callback',
    //loginToFacebook()
  });
 
-app.get('/signup', function(req, res){
+app.get('/showSurvey', function(req, res){
+  console.log('showsurvey', res)
   // create new survey for new user
 });
-
+app.get('/showMatches', function(req, res){
+  //create main view for matches
+})
 app.get('/survey', function(req, res) {
   traitifyUtil.createAssessment("core");
 });

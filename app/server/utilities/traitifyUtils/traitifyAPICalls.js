@@ -34,7 +34,7 @@ function createAssessment(deckId, callback) {
     });
 
     res.on('end', function(body) {
-      console.log("createAssessment survey", survey);
+      //console.log("createAssessment survey", survey);
       // send survey object in callback
       // e.g. survey
       // {"id":"c3effb3f-a57d-4f2a-bbdf-fd0d242d6545",
