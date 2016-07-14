@@ -23,8 +23,6 @@ var gotNewUser = function(param){
     } else {
       currentUser = user;
       console.log('u',user)
-      //gotNewUser(user)
-      //console.log(cb)
       cb(user)
     }
    })
@@ -134,6 +132,7 @@ var gotNewUser = function(param){
   }
 
   var getUserStatus = function(facebookId, facebookObject, cb){
+  console.log('getuserstatus', facebookId, facebookObject)
     //this is the user routing function
 
     //if new user add to db & cb{'newUser':null}
@@ -154,14 +153,14 @@ console.log('currentUser',currentUser)
          cb({'newUser':res})
        })
      } else
-     if (currentUser.testObject.testResults.length === 0){
+     if (currentUser.testObject.testResults === []){
        //existingUserUnfinshedSurvey
-
+console.log('has no test results')
        cb({'existingUserUnfinshedSurvey':currentUser})
 
      }else
        if (currentUser.testObject.testResults.length > 0){
-
+console.log('has test results')
        //existingUserSurveyComplete
        //get matches query results
        //deck is variable.. setting to core default
@@ -178,7 +177,7 @@ console.log('currentUser',currentUser)
        })
      } else {
        //exitingUserUnfinishedSurvey
-       cb({'exitingUserUnfinishedSurvey':null})
+       cb({'exitingUserUnfinishedSurvey':currentUser})
      }
      })
   }

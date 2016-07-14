@@ -3,9 +3,11 @@ var traitifyAPICalls = require('./traitifyUtils/traitifyAPICalls.js');
 
 
 exports.routeUser = function(facebookData, callback) {
-  // userController.getUserStatus(facebookData.id, facebookData, function(response) {
+console.log('in routeUser')
+   userController.getUserStatus(facebookData.id, facebookData, function(response) {
+    console.log('response from getUserStatus ' + response)
   returnNewUser(function(response) {
-    console.log("response", response);
+    console.log("returnNewUser", response);
     if (response.newUser) {
       // console.log("new user! :", response);
       // create new 'core' survey and then retrieve it
@@ -23,8 +25,8 @@ exports.routeUser = function(facebookData, callback) {
       callback("fail");
     }
   });
+})
 }
-
 
 /// test functions for database queries
 function returnNewUser(cb) {

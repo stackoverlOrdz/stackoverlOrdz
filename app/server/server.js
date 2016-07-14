@@ -28,6 +28,26 @@ app.use(session({
   secret: 'blue flamingo'
 }));
 
+// // Add headers
+// app.use(function (req, res, next) {
+//
+//     // Website you wish to allow to connect
+//     res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
+//
+//     // Request methods you wish to allow
+//     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+//
+//     // Request headers you wish to allow
+//     res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+//
+//     // Set to true if you need the website to include cookies in the requests sent
+//     // to the API (e.g. in case you use sessions)
+//     res.setHeader('Access-Control-Allow-Credentials', true);
+//
+//     // Pass to next layer of middleware
+//     next();
+// });
+
 
 // Facebook OAuth
 passport.serializeUser(function(user, done) {
@@ -58,10 +78,11 @@ app.get('/auth/facebook',
 app.get('/auth/facebook/callback',
   passport.authenticate('facebook', { failureRedirect: '/login' }),
   function(req, res) {
+    console.log("in auth/facebook/callback");
     var facebookData = facebookUtil.processFacebookData(req.user._json);
     loginUtil.routeUser(facebookData, function(route, survey, user) {
       ////DO STUFF HERE
-      // console.log("survey", survey);
+       console.log("return from router", route);
       if (route == 'survey') {
         console.log({route: route, data: survey, currentUser: user});
         res.send({route: route, data: survey, currentUser: user});
@@ -72,8 +93,9 @@ app.get('/auth/facebook/callback',
   });
 
  app.get('/login', function(req, res){
-   console.log('Getting to /login get request')
-   // res.redirect('/auth/facebook');
+  //  console.log('Getting to /login get request');
+  //  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+   res.redirect('/auth/facebook');
  });
 
 app.get('/signup', function(req, res){

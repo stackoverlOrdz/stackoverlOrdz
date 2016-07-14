@@ -1,6 +1,7 @@
 angular.module('spark.controller', [])
 
 .controller('registerCtrl', function($scope, registerFactory){
+
  $scope.data = {};
  $scope.getRequest = function(){
    registerFactory.getRequest()
