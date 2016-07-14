@@ -86,18 +86,18 @@ angular.module('spark.controller', [])
   };
 })
 
-.controller('mainCtrl', function($scope){
+.controller('mainCtrl', function($scope, mainFactory){
   $scope.message = 'Made it to main view';
   $scope.data = {};
 
-  $scope.getMatches = function(){
-    Matches.getAll()
+  $scope.getRequest = function(){
+    mainFactory.getRequest()
     .then(function(matches){
       $scope.data = matches;
     })
-    .catch(function(err){
-      console.error(err);
+    .catch(function(error){
+      console.error(error);
     });
   };
-  $scope.getMatches();
+  $scope.getRequest();
 });
