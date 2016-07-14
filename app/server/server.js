@@ -41,24 +41,6 @@ passport.deserializeUser(function(id, done) {
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.use(function(req, res, next) {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-  next();
-});
-
-
-/*
-
-{ id: '10153929891029332',
-  name: 'Rebecca Gray',
-  picture: 'https://scontent.xx.fbcdn.net/v/t1.0-1/p200x200/12742343_10153578598784332_5479975309254932247_n.jpg?oh=add386259087036d59d52ae84416b0c1&oe=5821B128',
-  email: 'example@gmail.com',
-  link: 'https://www.facebook.com/app_scoped_user_id/10153929891029332/' }
-
-  */
-
-
 passport.use(new FacebookStrategy({
     clientID: '150248838715978',
     clientSecret: '8a2911236f2e730fe93f84f060f38063',
@@ -66,15 +48,12 @@ passport.use(new FacebookStrategy({
     profileFields: ['id', 'displayName', 'picture.type(large)', 'email', 'birthday', 'profileUrl', 'location', 'verified']
   },
   function(accessToken, refreshToken, profile, done) {
-    console.log('in passport use',accessToken, refreshToken, profile)
     done(null, profile);
   }
 ));
 
-
-  app.get('/auth/facebook', passport.authenticate('facebook', { scope: ['email', 'user_birthday', 'user_photos', 'user_location', 'public_profile']}));
-
-
+app.get('/auth/facebook',
+  passport.authenticate('facebook', { scope: ['email', 'user_birthday', 'user_photos', 'user_location', 'public_profile']}));
 
 app.get('/auth/facebook/callback',
   passport.authenticate('facebook', { failureRedirect: '/login' }),
@@ -82,9 +61,10 @@ app.get('/auth/facebook/callback',
     var facebookData = facebookUtil.processFacebookData(req.user._json);
     loginUtil.routeUser(facebookData, function(response) {
       ////DO STUFF HERE
-     console.log("++ line 85 server.js");
+      // console.log("survey", survey);
     var route = response.route
     var data = response //JSON.stringify(response)
+
       if (route == 'survey') {
         //console.log({route: route, data: survey, currentUser: user});
 
@@ -96,12 +76,9 @@ app.get('/auth/facebook/callback',
     });
   });
 
-
-
  app.get('/login', function(req, res){
    console.log('Getting to /login get request')
    res.redirect('/auth/facebook');
-   //loginToFacebook()
  });
 
 // app.get('/showSurvey', function(req, res){
@@ -131,12 +108,10 @@ app.listen(port, function() {
   console.log('Listening on port ' + port);
 });
 
-//initialize the mongoose db server
-mongoose.connect('mongodb://sparkdb:spark@ds029328.mlab.com:29328/heroku_b7z7sd7t');
-
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function(){
-   console.log('connected');
+  // console.log('connected');
 });
 
+// userModel.initialize();
