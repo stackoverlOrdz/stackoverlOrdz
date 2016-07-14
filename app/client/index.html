@@ -1,25 +1,26 @@
 <!DOCTYPE html>
-<html>
+<html ng-app='myApp'>
 <head>
  <title></title>
 </head>
 <body>
-
-<div ng-app="spark" ng-controller="sparkCtrl">
-<h1>Spark</h1>
-
-<div ng-view></div>
-<button ng-click="signIn()">Log In With Facebook</button>
+<h1>Hey</h1>
+<div ng-controller='myController'>
+ <div>{{message}}</div>
+ <ul>
+   <li ng-repeat="category in categories">{{category.name}}</li>
+ </ul>
+<input type="" name="" ng-model="hello">
+ <h1>{{hello}}</h1>
+</div>
 
 <form action="/auth/facebook" method="get">
   <div>
     <input type="submit" value="Log In With Facebook">
   </div>
 </form>
+
 <script src="bower_components/angular/angular.min.js"></script>
-<script src="bower_components/angular-route/angular-route.min.js"></script>
-<script src="controllers/controllers.js"></script>
-<script src="services/services.js"></script>
-<script src="app.js"></script>
+<script type="text/javascript" src="app.js"></script>
 </body>
 </html>
