@@ -13,7 +13,9 @@ var mongoose = require ('mongoose');
 
 
 var facebookUtil = require('./utilities/facebookUtil.js');
-var traitifyUtil = require('./utilities/traitifyUtil.js');
+var traitifyUtil = require('./utilities/traitifyUtils/traitifyUtil.js');
+var traitifyAPICalls = require('./utilities/traitifyUtils/traitifyAPICalls.js');
+var loginUtil = require('./utilities/loginUtil.js');
 
 var FacebookStrategy = require('passport-facebook').Strategy;
 
@@ -26,14 +28,25 @@ app.use(session({
   secret: 'blue flamingo'
 }));
 
-//initialize the mongoose db server
-mongoose.connect('mongodb://sparkdb:spark@ds029328.mlab.com:29328/heroku_b7z7sd7t');
-
-var db = mongoose.connection;
-db.on('error', console.error.bind(console, 'connection error:'));
-db.once('open', function(){
-  console.log('connected');
-})
+// // Add headers
+// app.use(function (req, res, next) {
+//
+//     // Website you wish to allow to connect
+//     res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
+//
+//     // Request methods you wish to allow
+//     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+//
+//     // Request headers you wish to allow
+//     res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+//
+//     // Set to true if you need the website to include cookies in the requests sent
+//     // to the API (e.g. in case you use sessions)
+//     res.setHeader('Access-Control-Allow-Credentials', true);
+//
+//     // Pass to next layer of middleware
+//     next();
+// });
 
 
 // Facebook OAuth
@@ -55,26 +68,7 @@ passport.use(new FacebookStrategy({
     profileFields: ['id', 'displayName', 'picture.type(large)', 'email', 'birthday', 'profileUrl', 'location', 'verified']
   },
   function(accessToken, refreshToken, profile, done) {
-    var facebookData = facebookUtil.processFacebookData(profile._json);
-
-    // check if new user (db/mongoose check if exists by facebookID)
-    // userController.getUserStatus(facebookData.id, function(object) {
-      // if (object.newUser) {
-        // create new survey
-        // reroute to survey
-      // } else if (object.existingUserUnfinishedSurvey) {
-        // reroute to survey
-      // } else if (object.existingUserFinishedSurvey) {
-        // reroute to user landing
-      // }
-      done(null, profile);
-    // });
-      // route to user page
-    // }else {
-      // send facebookData to db
-      // userController.signup(facebookData);
-      // route to survey
-    // }
+    done(null, profile);
   }
 ));
 
@@ -84,35 +78,25 @@ app.get('/auth/facebook',
 app.get('/auth/facebook/callback',
   passport.authenticate('facebook', { failureRedirect: '/login' }),
   function(req, res) {
-    res.redirect('/');
+    console.log("in auth/facebook/callback");
+    var facebookData = facebookUtil.processFacebookData(req.user._json);
+    loginUtil.routeUser(facebookData, function(route, survey, user) {
+      ////DO STUFF HERE
+       console.log("return from router", route);
+      if (route == 'survey') {
+        console.log({route: route, data: survey, currentUser: user});
+        res.send({route: route, data: survey, currentUser: user});
+      } else {
+        res.send('/');
+      }
+    });
   });
 
-app.get('/', function(req, res){
-  if (req.session.passport && req.session.passport.user) {
-    // res.render('user');
-    // send response that user is logged in
-  } else {
-    // res.sendFile(path.resolve(__dirname + '/../client/index.html'));
-    // render index
-  }
-});
-
  app.get('/login', function(req, res){
+  //  console.log('Getting to /login get request');
+  //  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
    res.redirect('/auth/facebook');
  });
-
-app.get('/signup', function(req, res){
-  // create new survey for new user
-});
-
-app.get('/survey', function(req, res) {
-  traitifyUtil.createAssessment("core");
-});
-
-app.get('/logout', function(req, res){
-  delete req.session.passport;
-  res.redirect('/');
-});
 
 app.get('/signup', function(req, res){
   // create new survey for new user
@@ -138,8 +122,10 @@ app.listen(port, function() {
   console.log('Listening on port ' + port);
 });
 
+var db = mongoose.connection;
+db.on('error', console.error.bind(console, 'connection error:'));
+db.once('open', function(){
+  // console.log('connected');
+});
 
-
-
-
-
+// userModel.initialize();
