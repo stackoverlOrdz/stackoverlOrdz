@@ -8,7 +8,7 @@ var _  = require ('lodash')
 //this is our login method and adds a unique id, username, picture, email, birthday and location within the user's facebookObject
 
 
-  var currentUser;
+var currentUser;
 var gotNewUser = function(param){
   console.log('gotNewUser', param)
 
@@ -135,7 +135,7 @@ var gotNewUser = function(param){
 
   var getUserStatus = function(facebookId, facebookObject, cb){
     //this is the user routing function
-
+console.log('getuserStatus', facevookID, facebookObject)
     //if new user add to db & cb{'newUser':null}
     //if existing user no survey data cb {'existingUserUnfinshedSurvey':null}
     //if existing user with survey data
@@ -145,8 +145,9 @@ var gotNewUser = function(param){
      'facebookObject': facebookObject
    },
      function(err,currentUser){
-console.log('currentUser',currentUser)
+console.log('currUser from db' + currentUser)
      if (currentUser === null){
+  console.log('newuser')
        //newUser because not in db
        //proced to signup if new User
        signup(facebookObject, function(err,res){
@@ -154,14 +155,18 @@ console.log('currentUser',currentUser)
          cb({'newUser':res})
        })
      } else
-     if (currentUser.testObject.testResults.length === 0){
-       //existingUserUnfinshedSurvey
+     if (currentUser.testObject.testResults === []){
+  console.log('existing no test')
+       //existingUserSurveyComplete
+       //get matches query results
+       //deck is variable.. setting to core default
 
-       cb({'existingUserUnfinshedSurvey':currentUser})
+          //exitingUserUnfinishedSurvey
+       cb({'exitingUserUnfinishedSurvey':currentUser})
 
      }else
        if (currentUser.testObject.testResults.length > 0){
-
+console.log('existing has test')
        //existingUserSurveyComplete
        //get matches query results
        //deck is variable.. setting to core default
@@ -178,7 +183,7 @@ console.log('currentUser',currentUser)
        })
      } else {
        //exitingUserUnfinishedSurvey
-       cb({'exitingUserUnfinishedSurvey':null})
+       cb({'exitingUserUnfinishedSurvey':currentUser})
      }
      })
   }
