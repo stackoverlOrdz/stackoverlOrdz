@@ -154,14 +154,14 @@ console.log('currentUser',currentUser)
          cb({'newUser':res})
        })
      } else
-     if (currentUser.testObject.testResults.length === 0){
+     if (currentUser.testObject.core.testResults === []){
        //existingUserUnfinshedSurvey
-
+console.log('has no test results')
        cb({'existingUserUnfinshedSurvey':currentUser})
 
      }else
-       if (currentUser.testObject.testResults.length > 0){
-
+       if (currentUser.testObject.core.testResults.length > 0){
+console.log('has test results')
        //existingUserSurveyComplete
        //get matches query results
        //deck is variable.. setting to core default
@@ -178,7 +178,7 @@ console.log('currentUser',currentUser)
        })
      } else {
        //exitingUserUnfinishedSurvey
-       cb({'exitingUserUnfinishedSurvey':null})
+       cb({'exitingUserUnfinishedSurvey':currentUser})
      }
      })
   }
