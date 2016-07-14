@@ -23,8 +23,6 @@ var gotNewUser = function(param){
     } else {
       currentUser = user;
       console.log('u',user)
-      //gotNewUser(user)
-      //console.log(cb)
       cb(user)
     }
    })
@@ -148,6 +146,7 @@ var gotNewUser = function(param){
   }
 
   var getUserStatus = function(facebookId, facebookObject, cb){
+  console.log('getuserstatus', facebookId, facebookObject)
     //this is the user routing function
 
     //if new user add to db & cb{'newUser':null}
@@ -166,7 +165,6 @@ var gotNewUser = function(param){
        })
      } else
      if (currentUser.testObject.core.testResults === []){
-       //existingUserUnfinshedSurvey
 console.log('has no test results')
        cb({'existingUserUnfinshedSurvey':currentUser})
 

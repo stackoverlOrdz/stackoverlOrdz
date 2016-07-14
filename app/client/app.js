@@ -5,6 +5,7 @@ angular.module('spark', [
   'ngRoute'
 ])
 
+
 .config(function($routeProvider, $httpProvider) {
   $routeProvider
     .when('/', {
@@ -31,4 +32,3 @@ angular.module('spark', [
       redirectTo: '/takesurvey'
     });
 });
-
