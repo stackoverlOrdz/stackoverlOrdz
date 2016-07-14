@@ -1,0 +1,17 @@
+<div ng-controller="surveyCtrl">
+
+  <h1>Let's start out with a quick survey</h1>
+
+  <div ng-repeat="users in data">
+    <ul>
+      <li>
+        {{users.caption}}
+        <img src="{{users.image_desktop}}" height="200" width="300">
+        <button ng-click="yes($event.isTrusted,users.id)">That's me</button>
+        <button ng-click="no($event.isTrusted,users.id)">Not quite</button>
+        <p>{{users.response}}</p>
+      </li>
+    </ul>
+  </div>
+  <button ng-click="addResponse()">Submit</button>
+</div>
