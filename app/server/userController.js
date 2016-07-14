@@ -1,7 +1,7 @@
 var UserModel = require('./userModel.js')
-//var db = require ('./server.js')
+var db = require ('./server.js')
 var mongoose = require ('mongoose');
-var _ = require('lodash')
+var _  = require ('lodash')
 
 
 //add new user with facebook login data to the db Users to create a new user.
@@ -9,6 +9,10 @@ var _ = require('lodash')
 
 
   var currentUser;
+var gotNewUser = function(param){
+  console.log('gotNewUser', param)
+
+}
   var signup =  function(facebookObject, cb){
     var user = new UserModel.User({
      'facebookObject': facebookObject
@@ -19,7 +23,9 @@ var _ = require('lodash')
     } else {
       currentUser = user;
       console.log('u',user)
-      cb({'newUser': user})
+      //gotNewUser(user)
+      //console.log(cb)
+      cb(user)
     }
    })
   }
@@ -79,17 +85,26 @@ var _ = require('lodash')
     //create compareArray & add it to data before inserting it
     var compareArray = []
 
-    for (var i=0;i<testResults.length;i++){
-      item = testResults[i]
-      compareArray.push(item.score)
+    //fixed order for personality_type results
+    var fixedOrderOfResultsArray =
+    [
+    'Adventurous', 'Reliable', 'Charismatic', 'Mellow', 'Rational', 'Thoughtful', 'Social',
+    ]
+    // pull compare data from test object
+    var  res = []
+    for (var i=0;i<personality_types.length;i++){
+      item = personality_types[i]
+      res.push(item.score)
     }
 
-      UserModel.User.findByIdAndUpdate(currentUser._id.oid, {
-       $set:{
-        'testObject.core.testResults': testResults
-      ,'testObject.core.compareArray': compareArray
-    }},function(err,res){
+    compareArray = res
 
+    //to currentUser
+      UserModel.User.findByIdAndUpdate(currentUser._id, {
+       $set:{
+        'testObject.deck.testResults': testResults
+      ,'testObject.deck.compareArray': compareArray
+    }},null,function(err,res){
         if (err){
           console.error(err)
           cb(false)
@@ -103,10 +118,10 @@ var _ = require('lodash')
   var addTestObject = function(currentUser, deck, testQuestions, uniqueTestId, cb){
     //this adds the object and id used to present the survey
     //to the currentUser testObj under the deck name
-     UserModel.User.findByIdAndUpdate(currentUser._id.oid, {
+     UserModel.User.findByIdAndUpdate(currentUser._id, {
        $set: {
-        'testObject.core.testQuestions': testQuestions
-      ,'testObject.core.uniqueTestId' : uniqueTestId
+        'testObject.deck.testQuestions': testQuestions
+      ,'testObject.deck.uniqueTestId' : uniqueTestId
       }
     }, null,function(err,res){
         if (err){
@@ -120,36 +135,33 @@ var _ = require('lodash')
 
   var getUserStatus = function(facebookId, facebookObject, cb){
     //this is the user routing function
-console.log('getuserStatus', facevookID, facebookObject)
+
     //if new user add to db & cb{'newUser':null}
     //if existing user no survey data cb {'existingUserUnfinshedSurvey':null}
     //if existing user with survey data
     //>>query db for matches
     //cb {'existingUserSurveyComplete': matchQueryResultsObj}
-   UserModel.User.findOne(
-     {
-       'facebookObject.id':facebookId
-     },
+   UserModel.User.findOne({
+     'facebookObject': facebookObject
+   },
      function(err,currentUser){
-console.log('currUser from db' + currentUser)
+console.log('currentUser',currentUser)
      if (currentUser === null){
-  console.log('newuser')
        //newUser because not in db
        //proced to signup if new User
-       signup(facebookObject, cb)
+       signup(facebookObject, function(err,res){
+         console.log('res',res)
+         cb({'newUser':res})
+       })
      } else
-     if (currentUser.testObject.testResults.length === 0){
-  console.log('existing no test')
-       //existingUserSurveyComplete
-       //get matches query results
-       //deck is variable.. setting to core default
-
-          //exitingUserUnfinishedSurvey
-       cb({'exitingUserUnfinishedSurvey':currentUser})
+     if (currentUser.testObject.core.testResults === []){
+       //existingUserUnfinshedSurvey
+console.log('has no test results')
+       cb({'existingUserUnfinshedSurvey':currentUser})
 
      }else
-       if (currentUser.testObject.testResults.length > 0){
-console.log('existing has test')
+       if (currentUser.testObject.core.testResults.length > 0){
+console.log('has test results')
        //existingUserSurveyComplete
        //get matches query results
        //deck is variable.. setting to core default
@@ -179,28 +191,3 @@ module.exports = {
   addTestData:addTestData,
   getUserStatus:getUserStatus
 }
-
-//this is the data structure
-// user1{_id:mongoID,fbObj:fObj,tObj:tObj}
-// user = {_id:mongoID,fbObj:fObj,tObj:tObj}
-
-// {
-//   _id:mongoId,
-
-// facebookObject: { 'facebookId': fbId,
-//  'name': userName,
-//  'picture': picUrl(will be pic file),
-//  'email': email,
-//  'birthday': birthday},
-
-// testObject:
-// {core:
-//   {uniqueTestId:id,testQuestions:[{testQs}], testResults: [{testResultsEntire}], compareArray:[score0,score1,score2,score3,score4,score5]},
-//   career:{...} }
-// }
-
-
-// SPARK at TRAITIFY
-
-// Public Key: sk3lsqhlktc4qtpe9n1qqucsuq
-// Secret Key: eehk5r98913mgc3ni8s73jkdq2
