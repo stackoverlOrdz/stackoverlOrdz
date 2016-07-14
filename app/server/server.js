@@ -82,7 +82,7 @@ app.get('/auth/facebook/callback',
     var facebookData = facebookUtil.processFacebookData(req.user._json);
     loginUtil.routeUser(facebookData, function(response) {
       ////DO STUFF HERE
-    // console.log("survey", survey);
+     console.log("++ line 85 server.js");
     var route = response.route
     var data = response //JSON.stringify(response)
       if (route == 'survey') {
@@ -104,13 +104,13 @@ app.get('/auth/facebook/callback',
    //loginToFacebook()
  });
 
-app.get('/showSurvey', function(req, res){
-  console.log('showsurvey', res)
-  // create new survey for new user
-});
-app.get('/showMatches', function(req, res){
-  //create main view for matches
-})
+// app.get('/showSurvey', function(req, res){
+//   console.log('showsurvey')
+//   // create new survey for new user
+// });
+// app.get('/showMatches', function(req, res){
+//   //create main view for matches
+// })
 app.get('/survey', function(req, res) {
   traitifyUtil.createAssessment("core");
 });
