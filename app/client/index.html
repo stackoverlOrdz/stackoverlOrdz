@@ -1,19 +1,21 @@
 <!DOCTYPE html>
-<html ng-app='spark'>
+<html>
 <head>
  <title></title>
 </head>
 <body>
 
+<div ng-app="spark" ng-controller="sparkCtrl">
 <h1>Spark</h1>
-<div ng-view></div>
 
-<!-- <form action="/auth/facebook" method="get">
+<div ng-view></div>
+<button ng-click="signIn()">Log In With Facebook</button>
+
+<form action="/auth/facebook" method="get">
   <div>
     <input type="submit" value="Log In With Facebook">
   </div>
 </form>
- -->
 <script src="bower_components/angular/angular.min.js"></script>
 <script src="bower_components/angular-route/angular-route.min.js"></script>
 <script src="controllers/controllers.js"></script>

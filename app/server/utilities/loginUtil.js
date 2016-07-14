@@ -1,10 +1,9 @@
 var userController = require('../userController.js');
 var traitifyAPICalls = require('./traitifyUtils/traitifyAPICalls.js');
 
-
 exports.routeUser = function(facebookData, callback) {
-  // userController.getUserStatus(facebookData.id, facebookData, function(response) {
-  returnNewUser(function(response) {
+  userController.getUserStatus(facebookData.id, facebookData, function(response) {
+    // returnNewUser(function(response) {
     console.log("response", response);
     if (response.newUser) {
       // console.log("new user! :", response);
@@ -18,7 +17,7 @@ exports.routeUser = function(facebookData, callback) {
     } else if (response.existingUserSurveyComplete) {
       console.log("existing user, survey complete");
       // get "matches from DB"
-      // callback("matches", matches, facebookData);
+      callback("matches", matches, facebookData);
     } else {
       callback("fail");
     }

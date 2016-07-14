@@ -49,4 +49,3 @@ angular.module('spark.factory', [])
     postRequest: postRequest
   }
 })
-
