@@ -11,6 +11,10 @@ angular.module('spark', [
       templateUrl: 'views/register.html',
       controller: 'registerCtrl'
     })
+    .when('/takesurvey', {
+      templateUrl: 'views/takesurvey.html',
+      controller: 'takesurveyCtrl'
+    })
     .when('/survey', {
       templateUrl: 'views/survey.html',
       controller: 'surveyCtrl'
