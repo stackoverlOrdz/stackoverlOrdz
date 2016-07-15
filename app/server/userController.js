@@ -127,7 +127,7 @@ var gotNewUser = function(param){
     }
 
 
-  }
+
 
   var addTestObject = function(currentUser, deck, testQuestions, uniqueTestId, cb){
     //this adds the object and id used to present the survey
