@@ -12,8 +12,7 @@ var userController = require('./userController.js');
 var mongoose = require ('mongoose');
 
 
-var facebookUtil = require('./utilities/facebookUtil.js');
-var traitifyUtil = require('./utilities/traitifyUtils/traitifyUtil.js');
+
 var traitifyAPICalls = require('./utilities/traitifyUtils/traitifyAPICalls.js');
 var loginUtil = require('./utilities/loginUtil.js');
 
@@ -49,6 +48,8 @@ app.use(function(req, res, next) {
 
 
 /*
+
+//facebook object currently receiving..not getting location, birthday
 { id: '10153929891029332',
   name: 'Rebecca Gray',
   picture: 'https://scontent.xx.fbcdn.net/v/t1.0-1/p200x200/12742343_10153578598784332_5479975309254932247_n.jpg?oh=add386259087036d59d52ae84416b0c1&oe=5821B128',
@@ -70,47 +71,52 @@ passport.use(new FacebookStrategy({
 ));
 
 
-  app.get('/auth/facebook', passport.authenticate('facebook', { scope: ['email', 'user_birthday', 'user_photos', 'user_location', 'public_profile']}));
+app.get('/auth/facebook', passport.authenticate('facebook', { scope: ['email', 'user_birthday', 'user_photos', 'user_location', 'public_profile']}));
 
+var loginToFacebook = function(){
+    app.get('/auth/facebook/callback',
+      passport.authenticate('facebook', { failureRedirect: '/login' }),
+      function(req, res) {
+        var facebookData = facebookUtil.processFacebookData(req.user._json);
+        loginUtil.loginUser(facebookData, function(response) {
+        //no longer routing from login
 
+        // var route = response.route
+        // var data = response //JSON.stringify(response)
+        //   if (route == 'survey') {
+        //     //console.log({route: route, data: survey, currentUser: user});
 
-app.get('/auth/facebook/callback',
-  passport.authenticate('facebook', { failureRedirect: '/login' }),
-  function(req, res) {
-    var facebookData = facebookUtil.processFacebookData(req.user._json);
-    loginUtil.routeUser(facebookData, function(response) {
-      ////DO STUFF HERE
-     console.log("++ line 85 server.js");
-    var route = response.route
-    var data = response //JSON.stringify(response)
-      if (route == 'survey') {
-        //console.log({route: route, data: survey, currentUser: user});
+        //     res.redirect('/showSurvey?data=' + data);
+        //   } else if (route == 'matches'){
+        //     res.redirect('/showMatches?data=' + data);
+        //     //res.send('/');
+          })
+      });
+}
 
-        res.redirect('/showSurvey?data=' + data);
-      } else if (route == 'matches'){
-        res.redirect('/showMatches?data=' + data);
-        //res.send('/');
-      }
-    });
-  });
-
-
-
- app.get('/login', function(req, res){
-   console.log('Getting to /login get request')
-   res.redirect('/auth/facebook');
-   //loginToFacebook()
+app.get('/login', function(req, res){
+   //res.redirect('/auth/facebook');
+   loginToFacebook()
  });
 
-// app.get('/showSurvey', function(req, res){
-//   console.log('showsurvey')
-//   // create new survey for new user
-// });
-// app.get('/showMatches', function(req, res){
-//   //create main view for matches
-// })
-app.get('/survey', function(req, res) {
-  traitifyAPICalls.createAssessment("core");
+app.get('/loadSurvey', function(req, res){
+   //send survey to front end for the user to take
+   //currently just serving core survey from traitify
+  res.send(loginUtil.surveyData)
+});
+
+app.get('/loadMatches', function(req, res){
+  //create main view for matches
+  res.send(loginUtil.matchesData)
+})
+app.post('/sendSurvey', function(req, res) {
+  //this is the submission of the survey to traitify
+  var testResponses = req.data
+  var matches = {}
+  traitifyAPICalls.testSubmitResults("core", testResponses, function(req,res){
+        matches = res.data
+  });
+  res.send(matches)
 });
 
 app.get('/logout', function(req, res){
