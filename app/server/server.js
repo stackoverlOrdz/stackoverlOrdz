@@ -12,6 +12,7 @@ var userController = require('./userController.js');
 var mongoose = require ('mongoose');
 
 
+
 var traitifyAPICalls = require('./utilities/traitifyUtils/traitifyAPICalls.js');
 var loginUtil = require('./utilities/loginUtil.js');
 
@@ -71,7 +72,7 @@ passport.use(new FacebookStrategy({
 ));
 
 
-app.get('/auth/facebook', passport.authenticate('facebook', { scope: ['email', 'user_birthday', 'user_photos', 'user_location', 'public_profile']}));
+  app.get('/auth/facebook', passport.authenticate('facebook', { scope: ['email', 'user_birthday', 'user_photos', 'user_location', 'public_profile']}));
 
 
 var loginToFacebook = function(){
