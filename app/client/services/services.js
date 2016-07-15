@@ -1,32 +1,13 @@
 angular.module('spark.factory', [])
 
-.factory('registerFactory', function ($http) {
-
-  var getRequest = function(){
-    return $http({
-      method: 'GET',
-      url: '/login',
-      }).then(function successCallback(response) {
-        return response.data;
-      }, function errorCallback(response) {
-        console.log("Get request error!");
-      });
-  }
-
-  return {
-    getRequest: getRequest
-  }
-})
-
 .factory('takesurveyFactory', function ($http, $location) {
 
   var getRequest = function(){
     return $http({
       method: 'GET',
-      url: '/survey',
-      }).then(function successCallback(response) {
+      url: '/loadMatches',
+    }).then(function successCallback(response) {
         return response.data;
-        $location('/survey')
       }, function errorCallback(response) {
         console.log("Get request error!");
       });
@@ -35,6 +16,7 @@ angular.module('spark.factory', [])
   return {
     getRequest: getRequest
   }
+
 })
 
 .factory('surveyFactory', function ($http) {
@@ -42,9 +24,9 @@ angular.module('spark.factory', [])
   var getRequest = function(){
     return $http({
       method: 'GET',
-      url: '/signup',
+      url: '/loadSurvey',
     }).then(function successCallback(response) {
-        return response.data;
+        return response.data.data;
       }, function errorCallback(response) {
         console.log("Get request error!");
       });
@@ -53,7 +35,7 @@ angular.module('spark.factory', [])
   var postRequest = function(data){
     return $http({
       method: 'POST',
-      url: '/survey',
+      url: '/sendSurvey',
       data: data,
     }).then(function successCallback(response) {
         console.log('made a successful post');
