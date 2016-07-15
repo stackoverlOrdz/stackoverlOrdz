@@ -13,6 +13,7 @@ var optionsTemplate = {
 var assessmentId;
 // exports.createAssessment = function(deckId) {
 function createAssessment(deckId, callback) {
+  console.log('+++ createAssessment')
   // var options = {
   //   hostname: 'api.traitify.com',
   //   path: '/v1/assessments',
@@ -42,7 +43,8 @@ function createAssessment(deckId, callback) {
       // "created_at":1468444927272,"locale_key":"en-US"}
       assessmentId = survey.id;
       deck = survey.deck_id
-      callback(survey);
+      console.log('+++ end createAssessment', survey)
+      callback(survey)
     });
   });
 
@@ -55,7 +57,8 @@ function createAssessment(deckId, callback) {
   req.end();
 }
 
-function getAssessment(callback) {
+function getAssessment(assessmentId, callback) {
+  console.log('+++ getAssessment')
   var body = '';
 
   var options = {
@@ -84,6 +87,7 @@ function getAssessment(callback) {
       //   testResultsArray.push(testResult);
       // });
       // console.log(testResultsArray);
+      console.log('+++getAssessment data')
       callback(body);
       // testSubmitResults(assessmentId);
     });

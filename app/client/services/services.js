@@ -20,13 +20,19 @@ angular.module('spark.factory', [])
 })
 
 .factory('surveyFactory', function ($http) {
+  var data = [];
+
+  var getData = function(){
+    return data;
+  }
 
   var getRequest = function(){
     return $http({
       method: 'GET',
       url: '/loadSurvey',
     }).then(function successCallback(response) {
-        return response.data.data;
+      data = response.data;
+        return response.data;
       }, function errorCallback(response) {
         console.log("Get request error!");
       });
@@ -47,7 +53,8 @@ angular.module('spark.factory', [])
 
   return {
     getRequest: getRequest,
-    postRequest: postRequest
+    postRequest: postRequest,
+    getData: getData
   }
 })
 
