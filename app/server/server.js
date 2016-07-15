@@ -49,7 +49,6 @@ app.use(function(req, res, next) {
 
 /*
 
-
 //facebook object currently receiving..not getting location, birthday
 { id: '10153929891029332',
   name: 'Rebecca Gray',
@@ -72,8 +71,7 @@ passport.use(new FacebookStrategy({
 ));
 
 
-  app.get('/auth/facebook', passport.authenticate('facebook', { scope: ['email', 'user_birthday', 'user_photos', 'user_location', 'public_profile']}));
-
+app.get('/auth/facebook', passport.authenticate('facebook', { scope: ['email', 'user_birthday', 'user_photos', 'user_location', 'public_profile']}));
 
 var loginToFacebook = function(){
     app.get('/auth/facebook/callback',
@@ -101,10 +99,6 @@ app.get('/login', function(req, res){
    loginToFacebook()
  });
 
-app.get('/survey', function(req, res) {
-  traitifyAPICalls.createAssessment("core");
-}
-
 app.get('/loadSurvey', function(req, res){
    //send survey to front end for the user to take
    //currently just serving core survey from traitify
@@ -123,7 +117,6 @@ app.post('/sendSurvey', function(req, res) {
         matches = res.data
   });
   res.send(matches)
-
 });
 
 app.get('/logout', function(req, res){
