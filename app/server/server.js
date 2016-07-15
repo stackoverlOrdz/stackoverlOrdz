@@ -90,7 +90,6 @@ passport.use(new FacebookStrategy({
   }
 ));
 
-<<<<<<< HEAD
 app.get('/auth/facebook', passport.authenticate('facebook', { scope: ['email', 'user_birthday', 'user_photos', 'user_location', 'public_profile']}));
 
 var loginToFacebook = function(){
