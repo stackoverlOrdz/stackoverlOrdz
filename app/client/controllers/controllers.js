@@ -10,14 +10,22 @@ angular.module('spark.controller', [])
 
 .controller('takesurveyCtrl', function($scope, $location, surveyFactory, takesurveyFactory){
 
+  $scope.data = [];
+
   $scope.getRequest = surveyFactory.getRequest;
   $scope.getMatches = takesurveyFactory.getRequest;
 
   $scope.survey = function(){
     //Makes the get for the survey data
-    $scope.getRequest();
+    $scope.getRequest()
+    .then(function(data){
+      console.log('=',data)
+      $scope.data = data;
+      $location.path('/survey');
+    });
+
     //Re-routes the view to the survey
-    $location.path('/survey');
+
   };
 
   $scope.matches = function(){
@@ -31,18 +39,19 @@ angular.module('spark.controller', [])
 
 .controller('surveyCtrl', function($scope, $location, surveyFactory){
 
-   $scope.data = [];
+   $scope.data = surveyFactory.getData();
 
    $scope.response = [];
 
-   $scope.getRequest = function(){
-     surveyFactory.getRequest()
-       .then(function(data){
-         $scope.data = data;
-       }).catch(function(error){
-         console.log(error);
-       });
-   };
+   // $scope.getRequest = function(){
+   //   surveyFactory.getRequest()
+   //     .then(function(data){
+
+   //       $scope.data = data;
+   //     }).catch(function(error){
+   //       console.log(error);
+   //     });
+   // };
 
    $scope.addResponse = function (response) {
     $scope.loading = true;

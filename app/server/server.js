@@ -16,6 +16,7 @@ var mongoose = require ('mongoose');
 var traitifyAPICalls = require('./utilities/traitifyUtils/traitifyAPICalls.js');
 var loginUtil = require('./utilities/loginUtil.js');
 
+var responseObject;
 var FacebookStrategy = require('passport-facebook').Strategy;
 
 var app = express();
@@ -73,36 +74,30 @@ passport.use(new FacebookStrategy({
 
 app.get('/auth/facebook', passport.authenticate('facebook', { scope: ['email', 'user_birthday', 'user_photos', 'user_location', 'public_profile']}));
 
-var loginToFacebook = function(){
-    app.get('/auth/facebook/callback',
-      passport.authenticate('facebook', { failureRedirect: '/login' }),
-      function(req, res) {
-        var facebookData = facebookUtil.processFacebookData(req.user._json);
-        loginUtil.loginUser(facebookData, function(response) {
-        //no longer routing from login
 
-        // var route = response.route
-        // var data = response //JSON.stringify(response)
-        //   if (route == 'survey') {
-        //     //console.log({route: route, data: survey, currentUser: user});
+app.get('/auth/facebook/callback',
+  passport.authenticate('facebook', { failureRedirect: '/login' }),
+  function(req, res) {
+    var facebookData = loginUtil.processFacebookData(req.user._json);
+    console.log('+++ loginToFacebook')
+    loginUtil.loginUser(facebookData, function(response) {
+          // responseObject = response;
+           console.log(response)
+          res.redirect('/takesurvey')
+      })
+  });
 
-        //     res.redirect('/showSurvey?data=' + data);
-        //   } else if (route == 'matches'){
-        //     res.redirect('/showMatches?data=' + data);
-        //     //res.send('/');
-          })
-      });
-}
 
 app.get('/login', function(req, res){
-   //res.redirect('/auth/facebook');
-   loginToFacebook()
+  console.log('+++ get login')
+   res.redirect('/auth/facebook');
+
  });
 
 app.get('/loadSurvey', function(req, res){
-   //send survey to front end for the user to take
-   //currently just serving core survey from traitify
-  res.send(loginUtil.surveyData)
+  loginUtil.getSurvey(function(surveyData){
+     res.send(surveyData)
+  });
 });
 
 app.get('/loadMatches', function(req, res){
