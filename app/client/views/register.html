@@ -3,9 +3,11 @@
 
   <!-- Included achor tag version commented out as an alternate to avoid CORS conflict -->
 
-  <a href="/auth/facebook" role="button">
-    <button>Login with Facebook</button>
-  </a>
+<form action="/auth/facebook" method="get">
+  <div>
+    <input type="submit" value="Log In With Facebook" ng-submit="load()">
+  </div>
+</form>
 
   <!-- <button ng-click="getRequest()">Login with Facebook</button> -->
 </div>

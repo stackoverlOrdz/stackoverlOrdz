@@ -1,94 +1,96 @@
 angular.module('spark.controller', [])
 
-.controller('registerCtrl', function($scope, registerFactory){
- $scope.data = {};
- $scope.getRequest = function(){
-   registerFactory.getRequest()
-     .then(function(data){
-       $scope.data = data;
-     }).catch(function(error){
-       console.log(error);
-     });
- };
+.controller('registerCtrl', function($scope, $location){
+
+  $scope.load = function(){
+    $location.path('/takesurvey');
+  }
+
+})
+
+.controller('takesurveyCtrl', function($scope, $location, surveyFactory, takesurveyFactory){
+
+  $scope.data = [];
+
+  $scope.getRequest = surveyFactory.getRequest;
+  $scope.getMatches = takesurveyFactory.getRequest;
+
+  $scope.survey = function(){
+    //Makes the get for the survey data
+    $scope.getRequest()
+    .then(function(data){
+      console.log('=',data)
+      $scope.data = data;
+      $location.path('/survey');
+    });
+
+    //Re-routes the view to the survey
+
+  };
+
+  $scope.matches = function(){
+    //Makes the get for the survey data
+    $scope.getMatches();
+    //Re-routes the view to the survey
+    $location.path('/main');
+  };
+
 })
 
 .controller('surveyCtrl', function($scope, $location, surveyFactory){
 
- $scope.getRequest = function(){
-   surveyFactory.getRequest()
-     .then(function(data){
-       $scope.data = data;
-     }).catch(function(error){
-       console.log(error);
-     });
- };
+   $scope.data = surveyFactory.getData();
 
- $scope.getRequest();
+   $scope.response = [];
 
- $scope.data = [
- {
-   "id": "2a7f6eca-f2c8-44c9-bb6c-4a280e74c3a9",
-   "position": 1,
-   "caption": "Extreme Sports",
-   "image_desktop": "https://cdn.traitify.com/slides/2a7f6eca-f2c8-44c9-bb6c-4a280e74c3a9/desktop_retina",
-   "image_desktop_retina": "https://cdn.traitify.com/slides/2a7f6eca-f2c8-44c9-bb6c-4a280e74c3a9/desktop_retina",
-   "response": null,
-   "time_taken": null,
-   "completed_at": null,
-   "created_at": 1468251485047,
-   "focus_x": 50,
-   "focus_y": 50
- }];
+   // $scope.getRequest = function(){
+   //   surveyFactory.getRequest()
+   //     .then(function(data){
 
+   //       $scope.data = data;
+   //     }).catch(function(error){
+   //       console.log(error);
+   //     });
+   // };
 
- $scope.response = [];
-
- $scope.getRequest = function(){
-   surveyFactory.getRequest()
-     .then(function(data){
-       $scope.data = data;
-     }).catch(function(error){
-       console.log(error);
-     });
- };
-
- $scope.yes = function(event, id){
-    event = event;
-    var obj = {}
-    obj.id = id;
-    obj.response = event;
-    obj.time = 1000;
-    $scope.response.push(obj);
-    console.log($scope.response)
-  };
-
-  $scope.no = function(event, id){
-    event = false;
-    var obj = {}
-    obj.id = id;
-    obj.response = event;
-    obj.time = 1000;
-    $scope.response.push(obj);
-    console.log($scope.response)
-  };
-
-
-  $scope.addResponse = function (response) {
+   $scope.addResponse = function (response) {
     $scope.loading = true;
     surveyFactory.postRequest($scope.response)
       .then(function () {
         $scope.loading = false;
+        // response is matches object
+        $scope.matches = response;
+        //init matches view and show
         $location.path('/main');
       })
       .catch(function (error) {
         console.log(error);
       });
-  };
+   };
+
+   $scope.yes = function(event, id){
+     event = event;
+     var obj = {}
+     obj.id = id;
+     obj.response = event;
+     obj.time_taken = 1000;
+     $scope.response.push(obj);
+   };
+
+   $scope.no = function(event, id){
+     event = false;
+     var obj = {}
+     obj.id = id;
+     obj.response = event;
+     obj.time_taken = 1000;
+     $scope.response.push(obj);
+   };
+
 })
 
 .controller('mainCtrl', function($scope, mainFactory){
-  $scope.message = 'Made it to main view';
-  $scope.data = {};
+
+  $scope.data = ['Test'];
 
   $scope.getRequest = function(){
     mainFactory.getRequest()
@@ -99,5 +101,6 @@ angular.module('spark.controller', [])
       console.error(error);
     });
   };
-  $scope.getRequest();
+
+  // $scope.getRequest();
 });

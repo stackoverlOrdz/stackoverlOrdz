@@ -59,16 +59,17 @@ var gotNewUser = function(param){
         var resultsArray = _.orderBy(matches, ['greatestDifference', 'facebookObject'], ['desc'])
         // returns → objects for [[36, fbobj], [34, fbobj]]
 
-        //return  {currentUser:{fbObj},matches: [ fbObj , fbObj , fbObj ] }
+        //return  {currentUser:{fbObj},data: [ fbObj , fbObj , fbObj ] }
         var matchesObjet =
         {
           'currentUser': user.facebookObject,
-          'matches': null
+          'data': null
         }
         matches = []
         for (var i=0;i<resultsArray.length;i++){
           matches.push(resultsArray[i][1])
         }
+        matchesObject.data = matches;
         cb(matchesObject)
 
     //test user test has results
@@ -107,13 +108,26 @@ var gotNewUser = function(param){
     }},null,function(err,res){
         if (err){
           console.error(err)
-          cb(false)
+          //cb(false)
         } else {
-          console.log('testResults and compare array added')
-          cb(true)
+          console.log('testResults and compare array added to user db')
+          //cb(true)
         }
       })
-  }
+    if (!deck){
+      deck = 'core'
+    }
+      queryMatches(currentUser, deck, function(err,matches){
+         if (err){
+           console.error(err)
+         } else {
+           cb({'existingUserSurveyComplete':{route:'matches',data:matches,currentUser:currentUser}})
+         }
+       })
+    }
+
+
+
 
   var addTestObject = function(currentUser, deck, testQuestions, uniqueTestId, cb){
     //this adds the object and id used to present the survey
@@ -140,18 +154,15 @@ var gotNewUser = function(param){
     //if existing user no survey data cb {'existingUserUnfinshedSurvey':null}
     //if existing user with survey data
     //>>query db for matches
-    //cb {'existingUserSurveyComplete': matchQueryResultsObj}
-   UserModel.User.findOne({
+    UserModel.User.findOne({
      'facebookObject': facebookObject
    },
      function(err,currentUser){
-console.log('currentUser',currentUser)
      if (currentUser === null){
        //newUser because not in db
        //proced to signup if new User
        signup(facebookObject, function(err,res){
-         console.log('res',res)
-         cb({'newUser':res})
+         cb({'newUser': {route:'survey',data:[],currentUser:currentUser}})
        })
      } else
      if (currentUser.testObject.core.testResults === []){
@@ -173,12 +184,12 @@ console.log('has test results')
          if (err){
            console.error(err)
          } else {
-           cb({'existingUserSurveyComplete':matches})
+           cb({'existingUserSurveyComplete':{route:'matches',data:matches,currentUser:currentUser}})
          }
        })
      } else {
        //exitingUserUnfinishedSurvey
-       cb({'exitingUserUnfinishedSurvey':currentUser})
+       cb({'newUser':currentUser})
      }
      })
   }

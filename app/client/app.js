@@ -7,9 +7,17 @@ angular.module('spark', [
 
 .config(function($routeProvider, $httpProvider) {
   $routeProvider
+    .when('/', {
+        templateUrl: 'views/register.html',
+        controller: 'registerCtrl'
+    })
     .when('/register', {
       templateUrl: 'views/register.html',
       controller: 'registerCtrl'
+    })
+    .when('/takesurvey', {
+      templateUrl: 'views/takesurvey.html',
+      controller: 'takesurveyCtrl'
     })
     .when('/survey', {
       templateUrl: 'views/survey.html',
@@ -20,7 +28,7 @@ angular.module('spark', [
       controller: 'mainCtrl'
     })
     .otherwise({
-      redirectTo: '/register'
+      redirectTo: '/takesurvey'
     });
 });
 

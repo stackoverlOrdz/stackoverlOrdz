@@ -1,12 +1,12 @@
 angular.module('spark.factory', [])
 
-.factory('registerFactory', function ($http) {
+.factory('takesurveyFactory', function ($http, $location) {
 
   var getRequest = function(){
     return $http({
       method: 'GET',
-      url: '/login',
-      }).then(function successCallback(response) {
+      url: '/loadMatches',
+    }).then(function successCallback(response) {
         return response.data;
       }, function errorCallback(response) {
         console.log("Get request error!");
@@ -16,15 +16,22 @@ angular.module('spark.factory', [])
   return {
     getRequest: getRequest
   }
+
 })
 
 .factory('surveyFactory', function ($http) {
+  var data = [];
+
+  var getData = function(){
+    return data;
+  }
 
   var getRequest = function(){
     return $http({
       method: 'GET',
-      url: '/signup',
+      url: '/loadSurvey',
     }).then(function successCallback(response) {
+      data = response.data;
         return response.data;
       }, function errorCallback(response) {
         console.log("Get request error!");
@@ -34,7 +41,7 @@ angular.module('spark.factory', [])
   var postRequest = function(data){
     return $http({
       method: 'POST',
-      url: '/survey',
+      url: '/sendSurvey',
       data: data,
     }).then(function successCallback(response) {
         console.log('made a successful post');
@@ -46,7 +53,8 @@ angular.module('spark.factory', [])
 
   return {
     getRequest: getRequest,
-    postRequest: postRequest
+    postRequest: postRequest,
+    getData: getData
   }
 })
 
