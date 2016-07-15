@@ -108,12 +108,25 @@ var gotNewUser = function(param){
     }},null,function(err,res){
         if (err){
           console.error(err)
-          cb(false)
+          //cb(false)
         } else {
-          console.log('testResults and compare array added')
-          cb(true)
+          console.log('testResults and compare array added to user db')
+          //cb(true)
         }
       })
+    if (!deck){
+      deck = 'core'
+    }
+      queryMatches(currentUser, deck, function(err,matches){
+         if (err){
+           console.error(err)
+         } else {
+           cb({'existingUserSurveyComplete':{route:'matches',data:matches,currentUser:currentUser}})
+         }
+       })
+    }
+
+
   }
 
   var addTestObject = function(currentUser, deck, testQuestions, uniqueTestId, cb){
@@ -141,17 +154,14 @@ var gotNewUser = function(param){
     //if existing user no survey data cb {'existingUserUnfinshedSurvey':null}
     //if existing user with survey data
     //>>query db for matches
-    //cb {'existingUserSurveyComplete': matchQueryResultsObj}
-   UserModel.User.findOne({
+    UserModel.User.findOne({
      'facebookObject': facebookObject
    },
      function(err,currentUser){
-//console.log('currentUser',currentUser)
      if (currentUser === null){
        //newUser because not in db
        //proced to signup if new User
        signup(facebookObject, function(err,res){
-      //   console.log('res',res)
          cb({'newUser': {route:'survey',data:[],currentUser:currentUser}})
        })
      } else
