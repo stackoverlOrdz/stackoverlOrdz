@@ -12,6 +12,27 @@ angular.module('spark.controller', [])
  };
 })
 
+.controller('takesurveyCtrl', function($scope, $location, takesurveyFactory){
+ $scope.data = {};
+
+ $scope.getRequest = function(){
+   takesurveyFactory.getRequest()
+     .then(function(data){
+       if(response.route === "survey"){
+          $scope.loading = false;
+          $scope.data = data;
+          $location.path('/survey');
+        } if(response.route === "matches"){
+          $scope.loading = false;
+          $location.path('/main');
+        }
+     }).catch(function(error){
+       console.log(error);
+     });
+ };
+
+})
+
 .controller('surveyCtrl', function($scope, $location, surveyFactory){
 
  $scope.getRequest = function(){
@@ -57,7 +78,7 @@ angular.module('spark.controller', [])
     var obj = {}
     obj.id = id;
     obj.response = event;
-    obj.time = 1000;
+    obj.time_taken = 1000;
     $scope.response.push(obj);
     console.log($scope.response)
   };
@@ -67,7 +88,7 @@ angular.module('spark.controller', [])
     var obj = {}
     obj.id = id;
     obj.response = event;
-    obj.time = 1000;
+    obj.time_taken = 1000;
     $scope.response.push(obj);
     console.log($scope.response)
   };
