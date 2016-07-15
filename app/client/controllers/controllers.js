@@ -1,6 +1,6 @@
 angular.module('spark.controller', [])
 
-.controller('registerCtrl', function($scope, $location, registerFactory){
+.controller('registerCtrl', function($scope, $location){
 
   $scope.load = function(){
     $location.path('/takesurvey');
