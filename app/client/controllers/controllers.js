@@ -7,7 +7,7 @@ angular.module('spark.controller', [])
   }
 
 })
-
+//yo
 .controller('takesurveyCtrl', function($scope, $location, surveyFactory, takesurveyFactory){
 
   $scope.data = [];
