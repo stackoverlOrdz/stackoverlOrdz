@@ -2,7 +2,7 @@
 
   <h1>Let's start out with a quick survey</h1>
 
-  <div ng-repeat="users in data">
+  <div ng-repeat="users in data track by $index">
     <ul>
       <li>
         {{users.caption}}

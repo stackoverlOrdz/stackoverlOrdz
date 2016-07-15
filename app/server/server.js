@@ -49,13 +49,11 @@ app.use(function(req, res, next) {
 
 
 /*
-
 { id: '10153929891029332',
   name: 'Rebecca Gray',
   picture: 'https://scontent.xx.fbcdn.net/v/t1.0-1/p200x200/12742343_10153578598784332_5479975309254932247_n.jpg?oh=add386259087036d59d52ae84416b0c1&oe=5821B128',
   email: 'example@gmail.com',
   link: 'https://www.facebook.com/app_scoped_user_id/10153929891029332/' }
-
   */
 
 
@@ -112,7 +110,7 @@ app.get('/auth/facebook/callback',
 //   //create main view for matches
 // })
 app.get('/survey', function(req, res) {
-  traitifyUtil.createAssessment("core");
+  traitifyAPICalls.createAssessment("core");
 });
 
 app.get('/logout', function(req, res){
@@ -139,4 +137,3 @@ db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function(){
    console.log('connected');
 });
-
