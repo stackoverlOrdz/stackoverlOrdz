@@ -3,33 +3,8 @@ var traitifyAPICalls = require('./traitifyUtils/traitifyAPICalls.js');
 
 
 var loginUser = function(facebookData, callback) {
-   userController.getUserStatus(facebookData.id, facebookData, function(response) {
+   userController.getUserStatus(facebookData, function(response) {
         callback('ok')
-    //{newUser:{route:survey,data:survey,currentUser:userObject}}
-   // if (response.newUser) {
-//                  responseObject = response.newUser
-//                 // create new 'core' survey and then retrieve it
-//                 var surveyInfo;
-//                 traitifyAPICalls.createAssessment('core', function(surveyInfo) {
-//                    surveyInfo = surveyInfo
-//                       traitifyAPICalls.getAssessment(JSON.parse(surveyInfo).id, function(survey) {
-//                           surveyData = survey
-//                            responseObject.data = surveyData
-// console.log('+++loginuser.respon',responseObject)
-//                           //{route:survey,data:survey,currentUser:userObject}
-//                           callback(responseObject);
-//               });
-  //           })
-  //   } else if (response.existingUserSurveyComplete) {
-  //               //  var responseObject = response.existingUserSurveyComplete
-  //               matchesData = response.existingUserSurveyComplete
-  //                 //{route:matches,data:matches,currentUser:userObject}
-  //                 console.log("existing user, survey complete");
-  //                // callback(responseObject);
-  //   } else {
-  //              callback("fail");
-  //    }
-  // });
     })
  }
 
@@ -50,27 +25,32 @@ var getSurvey = function(callback){
 }
 
 var getResults = function(testResponses,callback){
-  var matches = {}
+  //var matches = {}
   var traitifyResults;
   traitifyAPICalls.testSubmitResults("core", testResponses, function (){
     console.log('im in a callback')
       traitifyAPICalls.getResults( function(traitifyResults){
         console.log('+++testSubmitResults resp')
         // traitifyResults = resultsInfo.data
-                userController.getMatches(traitifyResults, function(response){
-                  console.log('+++getMatches resp', response)
-                  matches.data = response;
-                  callback(matches)
-                })
+                userController.addTestData(currentUser, 'core', traitifyResults, function(response){
+                      console.log('+++addTestData',response)
+                      userController.queryMatches(traitifyResults, function(response){
+                        console.log('+++getMatches resp', response)
+                        //matches.data = response;
+                        callback(response)
+                      })
+             })
        })
     })
 }
 
 var processFacebookData = function(facebookInfo) {
-  console.log('facebookinfo' ,facebookInfo);
+  console.log('++++facebookinfo' ,facebookInfo);
   facebookInfo.picture = facebookInfo.picture.data.url;
+  var facebookId = facebookInfo.id
   //facebookInfo.location = facebookInfo.location.name;
   delete facebookInfo.verified;
+  facebookInfo.facebookId = facebookId
   return facebookInfo;
 };
 

@@ -112,10 +112,10 @@ app.post('/sendSurvey', function(req, res) {
   var testResponses = req.body
   loginUtil.getResults(testResponses, function(matchesObject){
     console.log('++++resp getResults', matchesObject)
-          res.send(matchesObject)
+    res.send(matchesObject)
   })
  });
-//  });
+
 
 app.get('/logout', function(req, res){
   delete req.session.passport;
