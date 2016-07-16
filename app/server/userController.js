@@ -131,19 +131,37 @@ cursor.on('close', function(){
     console.log('++line 113' ,currentUser)
 var foo = '578982afd4536b1514e0cb17'
     //to currentUser currentUser._id
-      UserModel.User.findByIdAndUpdate(foo, {
-       $set:{
-        'testObject.core.testResults': testResults
-      ,'testObject.core.compareArray': compareArray
-    }},null,function(err,res){
-        if (err){
-          console.error(err)
-          cb(false)
-        } else {
-          console.log('testResults and compare array added to user db')
-          cb(true)
-        }
-      })
+
+
+UserModel.User.findById(foo, function (err, user) {
+  // handle errors ..
+  var testResults =  user.testObject.core.testResults;
+  user.testResults = testResults;
+  var compareArray = user.testObject.core.compareArray;
+  user.compareArray = compareArray;
+  user.save(function(err,res){
+    if (err){
+      console.log(err)
+    }else {
+    console.log(res)
+    }
+  });
+});
+
+
+    //   UserModel.User.findByIdAndUpdate(foo, {
+    //    $set:{
+    //     testObject.core.testResults: testResults
+    //   ,testObject.core.compareArray: compareArray
+    // }},null,function(err,res){
+    //     if (err){
+    //       console.error(err)
+    //       cb(false)
+    //     } else {
+    //       console.log('testResults and compare array added to user db')
+    //       cb(true)
+    //     }
+    //   })
     if (!deck){
       deck = 'core'
     }

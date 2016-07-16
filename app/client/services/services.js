@@ -46,7 +46,7 @@ angular.module('spark.factory', [])
         data: JSON.stringify(data),
         headers: {'Content-Type': 'application/json'}
     }).then(function successCallback(response) {
-        console.log('made a successful post');
+        console.log('made a successful post', response.data, response.body);
         return response.data;
       }, function errorCallback(response) {
         console.log("Get request error!");
