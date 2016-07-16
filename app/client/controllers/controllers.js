@@ -57,8 +57,9 @@ angular.module('spark.controller', [])
      console.log('addresponse', $scope.response)
     $scope.loading = true;
     surveyFactory.postRequest($scope.response)
-      .then(function () {
+      .then(function (matchesData) {
         $scope.loading = false;
+        console.log(matchesData);
         // response is matches object
         //$scope.matches = $scope.response;
         //init matches view and show
