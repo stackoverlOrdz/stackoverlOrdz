@@ -1,0 +1,36 @@
+body {
+  background: #FBDA52;
+  text-align: center;
+  padding: 20px;
+  font-family: 'Raleway', sans-serif;
+}
+
+ul, li {
+  list-style-type: none;
+  text-align: center;
+  margin: 0 auto;
+  padding: 0;
+}
+
+#mainHeader {
+  color: grey;
+  font-size: 80px;
+  font-family: 'Galada', cursive;
+  /*padding: 20px;*/
+}
+
+#subHeader {
+  padding: 20px
+}
+
+#surveyItem {
+  padding: 20px;
+}
+
+#surveyImg {
+  height: auto;
+  width: auto;
+  max-width: 600px;
+  max-height: 600px;
+  padding: 20px;
+}
