@@ -2,13 +2,18 @@
 
   <h1>Let's start out with a quick survey</h1>
 
-  <div ng-repeat="users in data">
-    <ul>
-      <li>
-        {{users.caption}}
-        <img src="{{users.image_desktop}}" height="200" width="300">
-        <button ng-click="yes($event.isTrusted,users.id)">That's me</button>
-        <button ng-click="no($event.isTrusted,users.id)">Not quite</button>
+  <div id="surveyItem" ng-repeat="users in data">
+    <h2>{{users.caption}}</h2>
+    <img src="{{users.image_desktop}}" height="200" width="300">
+
+        <label class="btn btn-primary">
+          <input type="checkbox" ng-model="yes($event.isTrusted,users.id)" checked> That's me
+        </label>
+        <label class="btn btn-primary">
+          <input type="checkbox" ng-model="no($event.isTrusted,users.id)" checked> Not quite
+        </label>
+        <!-- <button ng-click=>That's me</button> -->
+        <!-- <button ng-click="no($event.isTrusted,users.id)">Not quite</button> -->
         <p>{{users.response}}</p>
       </li>
     </ul>
