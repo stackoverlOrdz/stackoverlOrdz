@@ -5,13 +5,14 @@ var traitifyAPICalls = require('./traitifyUtils/traitifyAPICalls.js');
 var loginUser = function(facebookData, callback) {
    userController.getUserStatus(facebookData, function(response) {
      console.log('++userStatus response', response)
-     //this could check to see if the user has takent he survey but for now, just checks that they are in the db as a user will return existingUser or newUser in an object with current user as the value
+     //this could check to see if the user has takent he survey but for now, just checks that they are in the db as a user will return 
+     //response  >> {newUser': true, currentUser:currentUser}
+   
         callback('ok')
     })
  }
-var assessmentId
+var assessmentId;
 var getSurvey = function(callback){
-                //   responseObject = response.newUser
                 // create new 'core' survey and then retrieve it
                 var surveyInfo;
                 traitifyAPICalls.createAssessment('core', function(surveyInfo) {
@@ -35,7 +36,7 @@ var getResults = function(testResponses,callback){
       traitifyAPICalls.getResults( assessmentId, function(traitifyResults){
         console.log('+++testSubmitResults resp')
         // traitifyResults = resultsInfo.data
-                userController.addTestData(currentUser, 'core', traitifyResults, function(response){
+                userController.addTestData('core', traitifyResults, function(response){
                       console.log('+++addTestData',response)
                       userController.queryMatches(traitifyResults, function(response){
                         console.log('+++getMatches resp', response)

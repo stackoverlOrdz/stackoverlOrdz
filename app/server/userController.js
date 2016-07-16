@@ -31,15 +31,6 @@ var signup = function(facebookObject, cb) {
     })
 }
 
-// query.all(path, array)
-// This method has extra sugar in that when only one argument is passed, the path in the last call to where() is used.
-
-// query.where('games').all(['fun', 'exhausting'])
-// results in
-
-// { games: { $all: ['fun', 'exhausting'] }}
-
-
 var queryMatches = function(currentUser, deck, cb) {
     var currentUserScores = currentUser.testObject.core.compareArray;
     console.log('+++query matches 51', currentUser, deck, currentUserScores)
@@ -104,28 +95,36 @@ var createCompareArray = function(testResults) {
             'Adventurous', 'Reliable', 'Charismatic', 'Mellow', 'Rational', 'Thoughtful', 'Social',
         ]
         // pull compare data from test object
+   // personality_types:
+   // [ { personality_type: [Object], score: 69.18741 },
+   //   { personality_type: [Object], score: 64.86154 },
+   //   { personality_type: [Object], score: 60.268654 },
+   //   { personality_type: [Object], score: 53.237137 },
+   //   { personality_type: [Object], score: 45.30274 },
+   //   { personality_type: [Object], score: 42.56005 },
+   //   { personality_type: [Object], score: 35.24566 } ],
     var compareArray = []
     for (var i = 0; i < testResults.length; i++) {
-        var item = testResults[i].personality_type
-        var name = item.name
-        var score = item.score
+        var name = testResults[i].personality_type.name
+        var score = testResults[i].score
         var indexinfixedOrderOfResultsArrayofName = fixedOrderOfResultsArray.indexOf(name)
         if (indexinfixedOrderOfResultsArrayofName > -1) {
             compareArray[indexinfixedOrderOfResultsArrayofName] = score
         } else {
             console.log('++++the names of the personality_types have been changed by traitify')
         }
-        // res.push(testResults[i].score)
     }
     console.log(compareArray)
     return compareArray
 }
 
 
-var addTestData = function(currentUser, deck, testResults, cb) {
+var addTestData = function(deck, testResults, cb) {
         //create compareArray for matching users
         var compareArray = createCompareArray(testResults)
         console.log('++++compareArray addTestdata line 126', compareArray)
+//no currentuser here??
+        console.log('++line 127 addTestdata curruser', currentUser)
         console.log('++line 127 addTestdata curruser._id', currentUser._id)
 
         UserModel.User.findById(currentUser._id, function(err, user) {
@@ -144,13 +143,8 @@ var addTestData = function(currentUser, deck, testResults, cb) {
             });
         });
 }
+
 var getUserStatus = function(facebookObject, cb) {
-    //this is the user routing function
-
-    //if new user add to db & cb{'newUser':null}
-    //if existing user no survey data cb {'existingUserUnfinshedSurvey':null}
-    //if existing user with survey data
-
     UserModel.User.findOne({
             'facebookObject.facebookId': facebookObject.facebookId
         },
@@ -160,31 +154,17 @@ var getUserStatus = function(facebookObject, cb) {
                 //newUser because not in db
                 signup(facebookObject, function(err, res) {
                     console.log('++++ signup complete', res)
+                    currentUser = res;
                     cb({
-                        'newUser': {
-                            route: 'survey',
-                            data: [],
-                            currentUser: currentUser
-                        }
+                        'newUser': true, 'currentUser': res
                     })
                 })
-            // } else 
-            //if (currentUser.testObject.core.testResults === []) {
-            //     //existingUserUnfinshedSurvey
-            //     console.log('+++user has no test results')
-            //     cb({
-            //         'existingUserUnfinshedSurvey': currentUser
-            //     })
-            // } else 
-            //if (currentUser.testObject.core.testResults.length > 0) {
-
-            //    console.log('+++++user has test results')
-                    //existingUserSurveyComplete
             } else {
                 console.log('+++ using otherwise route', currentUser)
+                currentUser = currentUser;
                     //exitingUserUnfinishedSurvey
                 cb({
-                    'exitingUser': currentUser
+                    'newUser': false, 'currentUser':currentUser
                 })
             }
         })
