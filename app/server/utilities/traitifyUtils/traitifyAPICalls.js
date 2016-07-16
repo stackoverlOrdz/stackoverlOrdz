@@ -125,10 +125,9 @@ function getResults(assessmentId, callback) {
     res.on('data', function(result) {
       body += result;
     });
-
+    
     res.on('end', function() {
       body = JSON.parse(body);
-         console.log("personality_types", body);
       callback(body.personality_types)
 
     });

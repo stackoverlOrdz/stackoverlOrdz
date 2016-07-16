@@ -106,6 +106,7 @@ app.get('/loadMatches', function(req, res){
   //create main view for matches
   res.send(loginUtil.matchesData)
 })
+
 app.post('/sendSurvey', function(req, res) {
     console.log("Got response: " + req.body);
  //this is the submission of the survey to traitify

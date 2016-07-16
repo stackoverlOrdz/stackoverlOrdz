@@ -42,11 +42,6 @@ var queryMatches = function(currentUser, deck, cb) {
         testObject: 'core'
     }).cursor();
     cursor.on('data', function(user) {
-        //console.log('+++line 55' ,user)
-
-        // UserModel.User.find().where().all(function(user){
-        //forEach user in Users generate differences array with currentUser
-
         compareArray = user.testObject.core.compareArray;
         var greatestDifference = 0,
             difference, matches = [];
@@ -117,6 +112,9 @@ var createCompareArray = function(testResults) {
 
 
 var addTestData = function(currentUser, deck, testResults, cb) {
+  if (!testResults){
+      console.log('no test resuts')
+  }
         //create compareArray for matching users
         var compareArray = createCompareArray(testResults)
         console.log('++++compareArray', compareArray)
@@ -125,20 +123,17 @@ var addTestData = function(currentUser, deck, testResults, cb) {
         console.log('++line 127 addTestdata curruser._id', currentUser._id)
 
         UserModel.User.findById(currentUser._id, function(err, user) {
-            // handle errors ..
-            //var testResults = user.testObject.core.testResults;
             user.testObject.core.testResults = testResults;
-            //compareArray = user.testObject.core.compareArray;
             user.testObject.core.compareArray = compareArray;
             user.save(function(err, res) {
                 if (err) {
                     console.log(err)
                 } else {
-                    console.log('++++userdb compareArray stored', user.testObject.core.compareArray)
-                        //      console.log(res)
+                    console.log('++++userdb compareArray stored')
                 }
             });
         });
+        cb('ok')
 }
 
 var getUserStatus = function(facebookObject, cb) {
