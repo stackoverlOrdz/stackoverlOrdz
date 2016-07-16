@@ -53,13 +53,14 @@ angular.module('spark.controller', [])
    //     });
    // };
 
-   $scope.addResponse = function (response) {
+   $scope.addResponse = function () {
+     console.log('addresponse', $scope.response)
     $scope.loading = true;
     surveyFactory.postRequest($scope.response)
       .then(function () {
         $scope.loading = false;
         // response is matches object
-        $scope.matches = response;
+        //$scope.matches = $scope.response;
         //init matches view and show
         $location.path('/main');
       })

@@ -43,7 +43,7 @@ function createAssessment(deckId, callback) {
       // "created_at":1468444927272,"locale_key":"en-US"}
       assessmentId = survey.id;
       deck = survey.deck_id
-      console.log('+++ end createAssessment', survey)
+      console.log('+++ end createAssessment id', assessmentId)
       callback(survey)
     });
   });
@@ -77,19 +77,9 @@ function getAssessment(assessmentId, callback) {
 
     res.on('end', function() {
       body = JSON.parse(body);
-
-      /// FOR TESTING ONLY ////
-      // body.forEach(function(item) {
-      //   var testResult = {};
-      //   testResult.id = item.id;
-      //   testResult.response = Boolean(Math.round(Math.random()));
-      //   testResult.time_taken = 1000;
-      //   testResultsArray.push(testResult);
-      // });
-      // console.log(testResultsArray);
       console.log('+++getAssessment data')
       callback(body);
-      // testSubmitResults(assessmentId);
+
     });
   });
 
@@ -103,6 +93,10 @@ function getAssessment(assessmentId, callback) {
 // TEST //
 
 function testSubmitResults(deck, testResultsArray, callback) {
+  console.log('+++testSubmitResults',assessmentId)
+  if (assessmentId === undefined){
+    assessmentId = 'c3effb3f-a57d-4f2a-bbdf-fd0d242d6545'
+  }
   var options = {
     hostname: 'api.traitify.com',
     path: '/v1/assessments/' + assessmentId + '/slides',
@@ -114,12 +108,17 @@ function testSubmitResults(deck, testResultsArray, callback) {
   };
 
   var req = https.request(options, function(res) {
+
+
+
     res.on('data', function(body) {
       // console.log('Body: ' + body);
     });
     res.on('end', function() {
       // console.log
-      getResults(assessmentId, callback);
+      // getResults(function(resp){
+          callback()
+     // });
 
     });
   });
@@ -130,6 +129,10 @@ function testSubmitResults(deck, testResultsArray, callback) {
 }
 
 function getResults(callback) {
+  console.log('+++getResults',callback)
+  if (assessmentId === undefined){
+    assessmentId = 'c3effb3f-a57d-4f2a-bbdf-fd0d242d6545'
+  }
   var body = '';
   var options = {
     hostname: 'api.traitify.com',
@@ -147,8 +150,9 @@ function getResults(callback) {
 
     res.on('end', function() {
       body = JSON.parse(body);
+         console.log("personality_types", body);
       callback(body.personality_types)
-      //  console.log("personality_types", body.personality_types);
+
     });
   });
 

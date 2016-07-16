@@ -1,8 +1,6 @@
 var userController = require('../userController.js');
 var traitifyAPICalls = require('./traitifyUtils/traitifyAPICalls.js');
 
- // var responseObject = {'foo':'bar'}
- // var matchesData = {}
 
 var loginUser = function(facebookData, callback) {
    userController.getUserStatus(facebookData.id, facebookData, function(response) {
@@ -51,6 +49,23 @@ var getSurvey = function(callback){
         })
 }
 
+var getResults = function(testResponses,callback){
+  var matches = {}
+  var traitifyResults;
+  traitifyAPICalls.testSubmitResults("core", testResponses, function (){
+    console.log('im in a callback')
+      traitifyAPICalls.getResults( function(traitifyResults){
+        console.log('+++testSubmitResults resp')
+        // traitifyResults = resultsInfo.data
+                userController.getMatches(traitifyResults, function(response){
+                  console.log('+++getMatches resp', response)
+                  matches.data = response;
+                  callback(matches)
+                })
+       })
+    })
+}
+
 var processFacebookData = function(facebookInfo) {
   console.log('facebookinfo' ,facebookInfo);
   facebookInfo.picture = facebookInfo.picture.data.url;
@@ -60,6 +75,7 @@ var processFacebookData = function(facebookInfo) {
 };
 
 module.exports = {
+  getResults:getResults,
   processFacebookData:processFacebookData,
   loginUser:loginUser,
   getSurvey:getSurvey
