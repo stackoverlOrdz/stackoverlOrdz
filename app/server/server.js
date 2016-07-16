@@ -113,7 +113,7 @@ app.post('/sendSurvey', function(req, res) {
   var testResponses = req.body
   loginUtil.getResults(testResponses, function(matchesObject){
     console.log('++++resp getResults', matchesObject)
-    res.send(matchesObject)
+    res.status(200).json(matchesObject)
   })
  });
 

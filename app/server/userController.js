@@ -114,13 +114,14 @@ var createCompareArray = function(testResults) {
 var addTestData = function(currentUser, deck, testResults, cb) {
   if (!testResults){
       console.log('no test resuts')
+      cb('error getting test results from API')
   }
         //create compareArray for matching users
         var compareArray = createCompareArray(testResults)
         console.log('++++compareArray', compareArray)
         //no currentuser here??
-        console.log('++line 127 addTestdata curruser', currentUser)
-        console.log('++line 127 addTestdata curruser._id', currentUser._id)
+        //console.log('++line 127 addTestdata curruser', currentUser)
+        //console.log('++line 127 addTestdata curruser._id', currentUser._id)
 
         UserModel.User.findById(currentUser._id, function(err, user) {
             user.testObject.core.testResults = testResults;
