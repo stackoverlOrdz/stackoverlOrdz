@@ -13,6 +13,7 @@ var _ = require('lodash');
 //   location: { id: '108424279189115', name: 'New York, New York' },
 //   verified: true }
 
+//comment
 // TODO: add random pictures for people, add to db
 
  var firstNames = ['Joe', 'Andrew', 'Adam', 'Eve', 'Barbara', 'George', 'Frodo', 'Bohee', 'Rebecca', 'Deniz', 'Joseph', 'John', 'Tyler', 'Phil', 'Abigail', 'Anteo', 'Alex'];
