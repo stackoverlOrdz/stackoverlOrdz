@@ -4,6 +4,7 @@ var db = require('./server.js')
 var mongoose = require('mongoose');
 var _ = require('lodash')
 
+var currentUser;
 
 //add new user with facebook login data to the db Users to create a new user.
 //this is our login method and adds a unique id, username, picture, email, birthday and location within the user's facebookObject
@@ -14,7 +15,7 @@ var _ = require('lodash')
 //the order of the results for comparison is fixed in the
 //FixedOrderOfResultsArray for the core deck test.
 //if additional tests are added, this will need to be developed further.
-var currentUser;
+
 
 var signup = function(facebookObject, cb) {
     var user = new UserModel.User({
@@ -64,10 +65,8 @@ var queryMatches = function(currentUser, deck, cb) {
                 greatestDifference: greatestDifference,
                 facebookObject: user.facebookObject
             })
-            // })
     })
     cursor.on('close', function() {
-
         })
         //sort the matches objet and return
     var resultsArray = _.orderBy(matches, ['greatestDifference', 'facebookObject'], ['desc'])
@@ -84,7 +83,6 @@ var queryMatches = function(currentUser, deck, cb) {
     }
     matchesObject.data = matches;
     console.log('+++matchesObject of greatestDiff line 92', matchesObject)
-
     cb(matchesObject)
 }
 
@@ -114,16 +112,14 @@ var createCompareArray = function(testResults) {
             console.log('++++the names of the personality_types have been changed by traitify')
         }
     }
-    console.log(compareArray)
     return compareArray
 }
 
 
-var addTestData = function(deck, testResults, cb) {
+var addTestData = function(currentUser, deck, testResults, cb) {
         //create compareArray for matching users
         var compareArray = createCompareArray(testResults)
-        console.log('++++compareArray addTestdata line 126', compareArray)
-//no currentuser here??
+        //no currentuser here??
         console.log('++line 127 addTestdata curruser', currentUser)
         console.log('++line 127 addTestdata curruser._id', currentUser._id)
 
@@ -170,6 +166,7 @@ var getUserStatus = function(facebookObject, cb) {
         })
 }
 module.exports = {
+  currentUser:currentUser,
     queryMatches: queryMatches,
     currentUser: currentUser,
     addTestData: addTestData,
