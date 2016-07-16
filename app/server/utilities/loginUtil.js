@@ -34,7 +34,7 @@ var getResults = function(testResponses,callback){
   traitifyAPICalls.testSubmitResults(assessmentId, "core", testResponses, function (){
     console.log('im in a callback')
       traitifyAPICalls.getResults( assessmentId, function(traitifyResults){
-        console.log('+++testSubmitResults resp',currentUser)
+        console.log('+++testSubmitResults resp')
                 userController.addTestData(currentUser,'core', traitifyResults, function(response){
                       console.log('+++addTestData',response)
                       userController.queryMatches(currentUser,traitifyResults, function(response){

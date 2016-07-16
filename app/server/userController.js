@@ -119,16 +119,17 @@ var createCompareArray = function(testResults) {
 var addTestData = function(currentUser, deck, testResults, cb) {
         //create compareArray for matching users
         var compareArray = createCompareArray(testResults)
+        console.log('++++compareArray', compareArray)
         //no currentuser here??
         console.log('++line 127 addTestdata curruser', currentUser)
         console.log('++line 127 addTestdata curruser._id', currentUser._id)
 
         UserModel.User.findById(currentUser._id, function(err, user) {
             // handle errors ..
-            var testResults = user.testObject.core.testResults;
-            user.testResults = testResults;
-            var compareArray = user.testObject.core.compareArray;
-            user.compareArray = compareArray;
+            //var testResults = user.testObject.core.testResults;
+            user.testObject.core.testResults = testResults;
+            //compareArray = user.testObject.core.compareArray;
+            user.testObject.core.compareArray = compareArray;
             user.save(function(err, res) {
                 if (err) {
                     console.log(err)
@@ -149,7 +150,7 @@ var getUserStatus = function(facebookObject, cb) {
             if (currentUser === null) {
                 //newUser because not in db
                 signup(facebookObject, function(err, res) {
-                    console.log('++++ signup complete', res)
+                    console.log('++++ signup complete')
                     currentUser = res;
                     cb({
                         'newUser': true, 'currentUser': res
@@ -166,7 +167,7 @@ var getUserStatus = function(facebookObject, cb) {
         })
 }
 module.exports = {
-  currentUser:currentUser,
+    currentUser:currentUser,
     queryMatches: queryMatches,
     currentUser: currentUser,
     addTestData: addTestData,
