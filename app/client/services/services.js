@@ -39,14 +39,14 @@ angular.module('spark.factory', [])
   }
 
   var postRequest = function(data){
-    console.log('inpostrequest', data)
+   console.log('inpostrequest', data)
    return $http({
         method: 'POST',
         url: '/sendSurvey',
         data: JSON.stringify(data),
         headers: {'Content-Type': 'application/json'}
     }).then(function successCallback(response) {
-        console.log('made a successful post', response.data, response.body);
+        console.log('made a successful post', response.data);
         return response.data;
       }, function errorCallback(response) {
         console.log("Get request error!");
