@@ -37,7 +37,7 @@ passport.serializeUser(function(user, done) {
 passport.deserializeUser(function(id, done) {
   done(null, id);
 });
-
+app.use(bodyParser.json())
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -105,14 +105,15 @@ app.get('/loadMatches', function(req, res){
   res.send(loginUtil.matchesData)
 })
 app.post('/sendSurvey', function(req, res) {
-  //this is the submission of the survey to traitify
-  var testResponses = req.data
-  var matches = {}
-  traitifyAPICalls.testSubmitResults("core", testResponses, function(req,res){
-        matches = res.data
-  });
-  res.send(matches)
-});
+    console.log("Got response: " + req.body);
+ //this is the submission of the survey to traitify
+  var testResponses = req.body
+  loginUtil.getResults(testResponses, function(matchesObject){
+    console.log('++++resp getResults', matchesObject)
+          res.send(matchesObject)
+  })
+ });
+//  });
 
 app.get('/logout', function(req, res){
   delete req.session.passport;

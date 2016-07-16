@@ -8,10 +8,19 @@ var _  = require ('lodash')
 //this is our login method and adds a unique id, username, picture, email, birthday and location within the user's facebookObject
 
 
-  var currentUser;
-var gotNewUser = function(param){
-  console.log('gotNewUser', param)
-
+var currentUser;
+var getMatches = function(traitifyResults, cb){
+  var matchesObject;
+  //addTestData = function(currentUser, deck, testResults, cb)
+  //queryMatches = function(currentUser,deck,cb)
+  console.log('+++getMathes curruser', currentUser)
+  addTestData(currentUser, 'core', traitifyResults, function(response){
+    console.log('+++addTestData',response)
+  })
+  // queryMatches(currentUser, 'core', function(response){
+  //    matchesObject = response;
+  // })
+  cb(matchesObject)
 }
   var signup =  function(facebookObject, cb){
     var user = new UserModel.User({
@@ -29,13 +38,29 @@ var gotNewUser = function(param){
     }
    })
   }
-  var queryMatches = function(currentUser,deck,cb){
-    var currentUserScores = currentUser.testObject.deck.compareArray;
 
-      UserModel.User.find().all(function(user){
+// query.all(path, array)
+// This method has extra sugar in that when only one argument is passed, the path in the last call to where() is used.
+
+// query.where('games').all(['fun', 'exhausting'])
+// results in
+
+// { games: { $all: ['fun', 'exhausting'] }}
+
+
+  var queryMatches = function(currentUser,deck,cb){
+    console.log('+++query matches 43', currentUser, deck)
+    var currentUserScores = currentUser.testObject.core.compareArray;
+    var matches=[]
+     var cursor = UserModel.User.find({}).cursor();
+       cursor.on('data', function(user){
+
+
+
+     // UserModel.User.find().where().all(function(user){
         //forEach user in Users generate differences array with currentUser
 
-        compareArray = user.testObject.deck.compareArray;
+        compareArray = user.testObject.core.compareArray;
         var greatestDifference=0, difference, matches = [];
 
         //find greatest difference between user scores
@@ -53,16 +78,19 @@ var gotNewUser = function(param){
            {
              greatestDifference: greatestDifference, facebookObject: user.facebookObject
            })
-        })
+        // })
+   })
+cursor.on('close', function(){
 
+})
         //sort the matches objet and return
         var resultsArray = _.orderBy(matches, ['greatestDifference', 'facebookObject'], ['desc'])
         // returns → objects for [[36, fbobj], [34, fbobj]]
 
         //return  {currentUser:{fbObj},data: [ fbObj , fbObj , fbObj ] }
-        var matchesObjet =
+        var matchesObject =
         {
-          'currentUser': user.facebookObject,
+          'currentUser': currentUser.facebookObject,
           'data': null
         }
         matches = []
@@ -93,25 +121,27 @@ var gotNewUser = function(param){
     ]
     // pull compare data from test object
     var  res = []
-    for (var i=0;i<personality_types.length;i++){
-      item = personality_types[i]
-      res.push(item.score)
+    for (var i=0;i<testResults.length;i++){
+      item = testResults[i].personality_type
+      console.log(item)
+      res.push(testResults[i].score)
     }
 
     compareArray = res
-
-    //to currentUser
-      UserModel.User.findByIdAndUpdate(currentUser._id, {
+    console.log('++line 113' ,currentUser)
+var foo = '578982afd4536b1514e0cb17'
+    //to currentUser currentUser._id
+      UserModel.User.findByIdAndUpdate(foo, {
        $set:{
-        'testObject.deck.testResults': testResults
-      ,'testObject.deck.compareArray': compareArray
+        'testObject.core.testResults': testResults
+      ,'testObject.core.compareArray': compareArray
     }},null,function(err,res){
         if (err){
           console.error(err)
-          //cb(false)
+          cb(false)
         } else {
           console.log('testResults and compare array added to user db')
-          //cb(true)
+          cb(true)
         }
       })
     if (!deck){
@@ -121,6 +151,7 @@ var gotNewUser = function(param){
          if (err){
            console.error(err)
          } else {
+           console.log('+++line 136' ,matches)
            cb({'existingUserSurveyComplete':{route:'matches',data:matches,currentUser:currentUser}})
          }
        })
@@ -129,23 +160,23 @@ var gotNewUser = function(param){
 
 
 
-  var addTestObject = function(currentUser, deck, testQuestions, uniqueTestId, cb){
-    //this adds the object and id used to present the survey
-    //to the currentUser testObj under the deck name
-     UserModel.User.findByIdAndUpdate(currentUser._id, {
-       $set: {
-        'testObject.deck.testQuestions': testQuestions
-      ,'testObject.deck.uniqueTestId' : uniqueTestId
-      }
-    }, null,function(err,res){
-        if (err){
-          console.error(err)
-          cb(false)
-        } else {
-          cb(true)
-        }
-      })
-  }
+  // var addTestObject = function(currentUser, deck, testQuestions, uniqueTestId, cb){
+  //   //this adds the object and id used to present the survey
+  //   //to the currentUser testObj under the deck name
+  //    UserModel.User.findByIdAndUpdate(currentUser._id, {
+  //      $set: {
+  //       'testObject.deck.testQuestions': testQuestions
+  //     ,'testObject.deck.uniqueTestId' : uniqueTestId
+  //     }
+  //   }, null,function(err,res){
+  //       if (err){
+  //         console.error(err)
+  //         cb(false)
+  //       } else {
+  //         cb(true)
+  //       }
+  //     })
+  // }
 
   var getUserStatus = function(facebookId, facebookObject, cb){
     //this is the user routing function
@@ -197,8 +228,8 @@ console.log('has test results')
 
 
 module.exports = {
+  getMatches:getMatches,
   currentUser:currentUser,
-  addTestObject:addTestObject,
   addTestData:addTestData,
   getUserStatus:getUserStatus
 }
