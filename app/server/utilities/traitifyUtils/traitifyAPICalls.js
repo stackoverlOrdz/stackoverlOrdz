@@ -10,7 +10,6 @@ var optionsTemplate = {
   }
 }
 
-var assessmentId;
 // exports.createAssessment = function(deckId) {
 function createAssessment(deckId, callback) {
   console.log('+++ createAssessment')
@@ -41,9 +40,6 @@ function createAssessment(deckId, callback) {
       // {"id":"c3effb3f-a57d-4f2a-bbdf-fd0d242d6545",
       // "deck_id":"core","tags":null,"completed_at":null,
       // "created_at":1468444927272,"locale_key":"en-US"}
-      assessmentId = survey.id;
-      deck = survey.deck_id
-      console.log('+++ end createAssessment id', assessmentId)
       callback(survey)
     });
   });
@@ -92,7 +88,7 @@ function getAssessment(assessmentId, callback) {
 
 // TEST //
 
-function testSubmitResults(deck, testResultsArray, callback) {
+function testSubmitResults(assessmentId, deck, testResultsArray, callback) {
   console.log('+++testSubmitResults',assessmentId)
   if (assessmentId === undefined){
     assessmentId = 'c3effb3f-a57d-4f2a-bbdf-fd0d242d6545'
@@ -128,11 +124,7 @@ function testSubmitResults(deck, testResultsArray, callback) {
   req.end();
 }
 
-function getResults(callback) {
-  console.log('+++getResults',callback)
-  if (assessmentId === undefined){
-    assessmentId = 'c3effb3f-a57d-4f2a-bbdf-fd0d242d6545'
-  }
+function getResults(assessmentId, callback) {
   var body = '';
   var options = {
     hostname: 'api.traitify.com',
@@ -164,7 +156,6 @@ function getResults(callback) {
 }
 
 module.exports = {
-  assessmentId:assessmentId,
   createAssessment: createAssessment,
   getAssessment: getAssessment,
   testSubmitResults: testSubmitResults,

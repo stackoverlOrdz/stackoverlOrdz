@@ -168,23 +168,23 @@ var getUserStatus = function(facebookObject, cb) {
                         }
                     })
                 })
-            } else
-            if (currentUser.testObject.core.testResults === []) {
-                //existingUserUnfinshedSurvey
-                console.log('+++user has no test results')
-                cb({
-                    'existingUserUnfinshedSurvey': currentUser
-                })
-            } else
-            if (currentUser.testObject.core.testResults.length > 0) {
+            // } else 
+            //if (currentUser.testObject.core.testResults === []) {
+            //     //existingUserUnfinshedSurvey
+            //     console.log('+++user has no test results')
+            //     cb({
+            //         'existingUserUnfinshedSurvey': currentUser
+            //     })
+            // } else 
+            //if (currentUser.testObject.core.testResults.length > 0) {
 
-                console.log('+++++user has test results')
+            //    console.log('+++++user has test results')
                     //existingUserSurveyComplete
             } else {
                 console.log('+++ using otherwise route', currentUser)
                     //exitingUserUnfinishedSurvey
                 cb({
-                    'newUser': currentUser
+                    'exitingUser': currentUser
                 })
             }
         })
