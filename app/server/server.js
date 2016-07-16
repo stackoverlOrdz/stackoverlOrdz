@@ -25,7 +25,9 @@ app.use(morgan('dev'));
 
 app.use(express.static(__dirname + '/../client'));
 app.use(session({
-  secret: 'blue flamingo'
+  secret: 'blue flamingo',
+  resave: true,
+  saveUninitialized: true
 }));
 
 
@@ -41,11 +43,11 @@ app.use(bodyParser.json())
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.use(function(req, res, next) {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-  next();
-});
+// app.use(function(req, res, next) {
+//   res.header("Access-Control-Allow-Origin", "*");
+//   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+//   next();
+// });
 
 
 /*
@@ -104,16 +106,17 @@ app.get('/loadMatches', function(req, res){
   //create main view for matches
   res.send(loginUtil.matchesData)
 })
+
 app.post('/sendSurvey', function(req, res) {
     console.log("Got response: " + req.body);
  //this is the submission of the survey to traitify
   var testResponses = req.body
   loginUtil.getResults(testResponses, function(matchesObject){
     console.log('++++resp getResults', matchesObject)
-          res.send(matchesObject)
+    res.status(200).json(matchesObject)
   })
  });
-//  });
+
 
 app.get('/logout', function(req, res){
   delete req.session.passport;

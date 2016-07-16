@@ -1,0 +1,21 @@
+body {
+  background: #FBDA52;
+  text-align: center;
+  padding: 10px;
+}
+
+ul, li {
+  list-style-type: none;
+  text-align: center;
+  margin: 0 auto;
+  padding: 0;
+}
+
+#mainHeader {
+  color: grey;
+  font-size: 64px;
+}
+
+#surveyItem {
+  padding: 10px;
+}
