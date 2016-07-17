@@ -4,19 +4,14 @@
 
   <div id="surveyItem" ng-repeat="users in data">
     <h2>{{users.caption}}</h2>
-    <img src="{{users.image_desktop}}" height="200" width="300">
-
+    <img  id="surveyImg" src="{{users.image_desktop}}" height="200" width="300">
+    <br>
         <label class="btn btn-primary">
-          <input type="checkbox" ng-model="yes($event.isTrusted,users.id)" checked> That's me
+          <input type="checkbox" ng-click="yes(users.id)">That's me</button>
         </label>
         <label class="btn btn-primary">
-          <input type="checkbox" ng-model="no($event.isTrusted,users.id)" checked> Not quite
+          <input type="checkbox" ng-click="no(users.id)">Not quite</button>
         </label>
-        <!-- <button ng-click=>That's me</button> -->
-        <!-- <button ng-click="no($event.isTrusted,users.id)">Not quite</button> -->
-        <p>{{users.response}}</p>
-      </li>
-    </ul>
   </div>
   <button ng-click="addResponse()">Submit</button>
 </div>

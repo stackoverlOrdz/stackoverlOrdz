@@ -3,6 +3,7 @@ angular.module('spark.controller', [])
 .controller('registerCtrl', function($scope, $location){
 
   $scope.load = function(){
+    //re-routes to takesurvey view upon login button click
     $location.path('/takesurvey');
   }
 
@@ -10,22 +11,25 @@ angular.module('spark.controller', [])
 
 .controller('takesurveyCtrl', function($scope, $location, surveyFactory, takesurveyFactory){
 
+  //contains loaded surevy data from traitify API
   $scope.data = [];
 
+  //defines get request from tavesurveyFactory http request
   $scope.getRequest = surveyFactory.getRequest;
+
+  //posts completed survey data and receives surevy results from traitify
   $scope.getMatches = takesurveyFactory.getRequest;
 
   $scope.survey = function(){
-    //Makes the get for the survey data
+    //initiates get for the survey data from surveyFactory http request
     $scope.getRequest()
+    //async promise to reassign suvery data array from
     .then(function(data){
       console.log('=',data)
       $scope.data = data;
+      //Re-routes the view to the survey
       $location.path('/survey');
     });
-
-    //Re-routes the view to the survey
-
   };
 
   $scope.matches = function(){
@@ -43,18 +47,9 @@ angular.module('spark.controller', [])
 
    $scope.response = [];
 
-   // $scope.getRequest = function(){
-   //   surveyFactory.getRequest()
-   //     .then(function(data){
-
-   //       $scope.data = data;
-   //     }).catch(function(error){
-   //       console.log(error);
-   //     });
-   // };
+   $scope.date = Date.now();
 
    $scope.addResponse = function () {
-     console.log('addresponse', $scope.response)
     $scope.loading = true;
     surveyFactory.postRequest($scope.response)
       .then(function (matchesData) {
@@ -70,21 +65,19 @@ angular.module('spark.controller', [])
       });
    };
 
-   $scope.yes = function(event, id){
-     event = event;
+   $scope.yes = function(id){
      var obj = {}
      obj.id = id;
-     obj.response = event;
-     obj.time_taken = 1000;
+     obj.response = true;
+     obj.time_taken = Date.now() - $scope.date;
      $scope.response.push(obj);
    };
 
-   $scope.no = function(event, id){
-     event = false;
+   $scope.no = function(id){
      var obj = {}
      obj.id = id;
-     obj.response = event;
-     obj.time_taken = 1000;
+     obj.response = false;
+     obj.time_taken = Date.now() - $scope.date;
      $scope.response.push(obj);
    };
 
