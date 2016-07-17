@@ -97,7 +97,7 @@ angular.module('spark.controller', [])
 
 })
 
-.controller('mainCtrl', function($scope, surveyFactory, mainFactory){
+.controller('mainCtrl', function($scope, $location, surveyFactory, mainFactory){
 
   //loads currentUser data from Facebook API through surveyFactory http post response
   $scope.data = []
@@ -123,4 +123,16 @@ angular.module('spark.controller', [])
       console.error(error);
     });
   };
+
+  $scope.logout = function(){
+    $scope.loading = true;
+    mainFactory.logoutRequest()
+    .then(function(matches){
+      $scope.loading = false;
+      $location.path('/register');
+    })
+    .catch(function(error){
+      console.error(error);
+    });
+  }
 });
