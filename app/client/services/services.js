@@ -70,7 +70,19 @@ angular.module('spark.factory', [])
       });
   }
 
+  var logoutRequest = function(){
+    return $http({
+      method: 'GET',
+      url: '/logout',
+      }).then(function successCallback(response) {
+        return response.data;
+      }, function errorCallback(response) {
+        console.log("Get request error!");
+      });
+  }
+
   return {
-    getRequest: getRequest
+    getRequest: getRequest,
+    logoutRequest: logoutRequest
   }
 })
