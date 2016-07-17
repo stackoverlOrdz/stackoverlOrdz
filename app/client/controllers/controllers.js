@@ -30,8 +30,6 @@ angular.module('spark.controller', [])
       //Re-routes the view to the survey
       $location.path('/survey');
     });
-
-
   };
 
   $scope.matches = function(){
@@ -49,6 +47,7 @@ angular.module('spark.controller', [])
 
    $scope.response = [];
 
+   $scope.date = Date.now();
 
    $scope.addResponse = function () {
     $scope.loading = true;
@@ -66,13 +65,19 @@ angular.module('spark.controller', [])
       });
    };
 
+   $scope.yes = function(id){
      var obj = {}
      obj.id = id;
+     obj.response = true;
+     obj.time_taken = Date.now() - $scope.date;
      $scope.response.push(obj);
    };
 
+   $scope.no = function(id){
      var obj = {}
      obj.id = id;
+     obj.response = false;
+     obj.time_taken = Date.now() - $scope.date;
      $scope.response.push(obj);
    };
 
