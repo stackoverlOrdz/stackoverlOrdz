@@ -41,7 +41,7 @@ bower install
 
 ### Roadmap
 
-View the project roadmap [here](contributing.md)
+View the project roadmap [here](https://github.com/stackoverlOrdz/stackoverlOrdz/blob/development/ROADMAP.md)
 
 
 ## Contributing
