@@ -120,7 +120,7 @@ app.post('/sendSurvey', function(req, res) {
 
 app.get('/logout', function(req, res){
   delete req.session.passport;
-  // res.redirect('/');
+  res.redirect('/');
 });
 
 app.get('/*', function(req, res){
