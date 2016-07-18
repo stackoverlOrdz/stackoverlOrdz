@@ -1,7 +1,5 @@
 angular.module('spark.factory', [])
 
-
-
 .factory('surveyFactory', function ($http) {
 
   //storage for survey data received from Facebook API
@@ -88,21 +86,6 @@ angular.module('spark.factory', [])
     getRequest: getRequest,
     logoutRequest: logoutRequest
   }
-})
-.factory('appData', [function(){
-  var cache = {};
-  return { 
-     set:function(location, payload){
-       cache[location]=payload
-     },
-     get:function(location){
-       return cache[location];
-
-     },
-     clear:function(){
-       cache={}
-     }
-   }
-}])
+});
 
 
