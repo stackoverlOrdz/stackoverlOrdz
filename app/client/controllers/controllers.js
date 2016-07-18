@@ -9,7 +9,7 @@ angular.module('spark.controller', [])
 
 })
 
-.controller('takesurveyCtrl', function($scope, $location, surveyFactory, mainFactory){
+.controller('takesurveyCtrl', function($scope, $location, surveyFactory, mainFactory, $rootScope){
 
   //defines get request from surveyFactory http request
   $scope.getRequest = surveyFactory.getRequest;
@@ -31,9 +31,11 @@ angular.module('spark.controller', [])
 
   $scope.matches = function(){
     //initializes the get request for the matches data from database
-    $scope.getMatches();
-    //Re-routes the view to the main
-    $location.path('/main');
+    $scope.getMatches()
+    .then(function(response){
+      $rootScope.matchesData = response;
+      $location.path('/main');
+    })  
   };
 
 })
