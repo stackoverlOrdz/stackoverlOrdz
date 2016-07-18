@@ -1,4 +1,4 @@
-angular.module('spark.controller', [])
+angular.module('spark.controller', ['ngAnimate', 'ui.bootstrap'])
 
 .controller('registerCtrl', function($scope, $location){
 
@@ -42,8 +42,8 @@ angular.module('spark.controller', [])
 
    //loads survey data from traitify API through surveyFactory http get request
    $scope.questions = surveyFactory.getData();
-  //  console.log($scope.questions);
    $scope.questions[0].isCurrentQuestion = true;
+   console.log($scope.questions);
 
    //storage for survey response data to send to traitify for anaylsis
    $scope.response = [];
@@ -78,7 +78,7 @@ angular.module('spark.controller', [])
    $scope.date = Date.now();
 
    //Builds response data array for "That's me" response
-   $scope.yes = function(id){
+   $scope.yes = function(id, index){
      //Storage for response object per traitify API specs
      var obj = {}
      //Assignment of id property from ng-click this object
@@ -90,13 +90,13 @@ angular.module('spark.controller', [])
      //records response in $scope.response array
      $scope.response.push(obj);
 
-     console.log($index);
-     $scope.questions[$index].isCurrentQuestion = false;
-     $scope.questions[$index + 1].isCurrentQuestion = true;
+     console.log(index);
+     $scope.questions[index].isCurrentQuestion = false;
+     $scope.questions[index + 1].isCurrentQuestion = true;
    };
 
    //Builds response data array for "Not Quite" response
-   $scope.no = function(id){
+   $scope.no = function(id, index){
      //Storage for response object per traitify API specs
      var obj = {}
      //Assignment of id property from ng-click this object
@@ -107,9 +107,10 @@ angular.module('spark.controller', [])
      obj.time_taken = Date.now() - $scope.date;
      //records response in $scope.response array
      $scope.response.push(obj);
-     console.log($index);
-     $scope.questions[$index].isCurrentQuestion = false;
-     $scope.questions[$index + 1].isCurrentQuestion = true;
+
+     console.log(index);
+     $scope.questions[index].isCurrentQuestion = false;
+     $scope.questions[index + 1].isCurrentQuestion = true;
    };
 
 
