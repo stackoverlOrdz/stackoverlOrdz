@@ -38,7 +38,7 @@ angular.module('spark.controller', [])
 
 })
 
-.controller('surveyCtrl', function($scope, $location, surveyFactory){
+.controller('surveyCtrl', function($scope, $location, surveyFactory, mainFactory,appData,$rootScope){
 
    //loads survey data from traitify API through surveyFactory http get request
    $scope.data = surveyFactory.getData();
@@ -55,9 +55,15 @@ angular.module('spark.controller', [])
       .then(function (matchesData) {
         $scope.loading = false;
         //UNCOMMENT TO TEST console.log('This is the matchesData', matchesData);
-        $scope.surveyResults = matchesData;
+          
+        //$scope.matchesData = matchesData;
+        $rootScope.matchesData = matchesData;
         //Re-routes the view to the main
+        //appData.set('cacheScope', $scope);
+
         $location.path('/main');
+        //$scope = appData.get('cacheScope');
+    
       })
       .catch(function (error) {
         console.log(error);
@@ -95,45 +101,7 @@ angular.module('spark.controller', [])
      $scope.response.push(obj);
    };
 
-})
 
-.controller('mainCtrl', function($scope, $location, surveyFactory, mainFactory){
-
-  //loads currentUser data from Facebook API through surveyFactory http post response
-  $scope.data = []
-
-  $scope.data.push(surveyFactory.postData());
-  console.log(scorpe.data)
-// $scope.data =   
-// { currentUser:
-//   { facebookId: '10208421029298176',
-//     email: 'seamus.benjamin@gmail.com',
-//     picture: 'https://scontent.xx.fbcdn.net/v/t1.0-1/p200x200/10172863_10204160056536520_4196894443008974303_n.jpg?oh=15682bda7fa39120dc70f4f0c9a65054&oe=58342B8E',
-//     name: 'Seamus McManus' },
-//  data:
-//   [ { facebookId: '4446615048021',
-//       birthday: '10/31/1991',
-//       email: 'deniztetik31@gmail.com',
-//       picture: 'https://scontent.xx.fbcdn.net/v/t1.0-1/p200x200/12439125_4310556926653_2253072521179427388_n.jpg?oh=3bf29ec513c932dd46b4296bedb5bdad&oe=5824A23F',
-//       name: 'Deniz Aslan' },
-//     { facebookId: '10153929891029332',
-//       email: 'rebecca.gray@gmail.com',
-//       picture: 'https://scontent.xx.fbcdn.net/v/t1.0-1/p200x200/12742343_10153578598784332_5479975309254932247_n.jpg?oh=add386259087036d59d52ae84416b0c1&oe=5821B128',
-//       name: 'Rebecca Gray' },
-//     { facebookId: '10210427029418377',
-//       email: 'ndrewleonardi2@gmail.com',
-//       picture: 'https://scontent.xx.fbcdn.net/v/t1.0-1/p200x200/10173736_10203834730535025_4221067989246668134_n.jpg?oh=d632046bb11e6f6fbb26a1ee60245f7b&oe=582743C7',
-//       name: 'Andrew Leonardi' } ] }
-// console.log('scope.data' ,$scope.data)
-  //UNCOMMENT TO TEST console.log('This is the currentUser data', $scope.data);
-
-  //UNCOMMENT FOR TESTING PURPOSES
-  // $scope.data = [{'currentUser': {
-  // 'email': "ndrewleonardi2@gmail.com",
-  // 'facebookId': "10210427029418377",
-  // 'name': "Andrew Leonardi",
-  // 'picture': "https://scontent.xx.fbcdn.net/v/t1.0-1/p200x200/10173736_10203834730535025_4221067989246668134_n.jpg?oh=d632046bb11e6f6fbb26a1ee60245f7b&oe=582743C7"
-  // }}];
 
   $scope.getRequest = function(){
     mainFactory.getRequest()

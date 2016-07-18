@@ -1,11 +1,12 @@
-<div ng-controller="mainCtrl">
+<div ng-controller="surveyCtrl">
 
   <button ng-click="logout()">Logout</button>
 
-  <h2>Hey  {{data.currentUser.name}}</h2><br><br>
+  <h2>Hey  {{matchesData.currentUser.name}}</h2><br><br>
+
 
 <h2>We think you might like these people</h2><br>
-  <div ng-repeat="match in data.data">
+  <div ng-repeat="match in matchesData.data">
     <img  src="{{ match.picture }}" />
           <h3>  {{ match.name }} 
             {{ match.email }} </h3>

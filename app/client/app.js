@@ -25,7 +25,7 @@ angular.module('spark', [
     })
     .when('/main', {
       templateUrl: 'views/main.html',
-      controller: 'mainCtrl'
+      controller: 'surveyCtrl'
     })
     .otherwise({
       redirectTo: '/takesurvey'
