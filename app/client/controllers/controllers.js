@@ -41,7 +41,7 @@ angular.module('spark.controller', [])
 .controller('surveyCtrl', function($scope, $location, surveyFactory, mainFactory,appData,$rootScope){
 
    //loads survey data from traitify API through surveyFactory http get request
-   $scope.data = surveyFactory.getData();
+   $scope.questions = surveyFactory.getData();
 
    //storage for survey response data to send to traitify for anaylsis
    $scope.response = [];
@@ -55,7 +55,7 @@ angular.module('spark.controller', [])
       .then(function (matchesData) {
         $scope.loading = false;
         //UNCOMMENT TO TEST console.log('This is the matchesData', matchesData);
-          
+
         //$scope.matchesData = matchesData;
         $rootScope.matchesData = matchesData;
         //Re-routes the view to the main
@@ -63,7 +63,7 @@ angular.module('spark.controller', [])
 
         $location.path('/main');
         //$scope = appData.get('cacheScope');
-    
+
       })
       .catch(function (error) {
         console.log(error);
@@ -106,7 +106,7 @@ angular.module('spark.controller', [])
   $scope.getRequest = function(){
     mainFactory.getRequest()
     .then(function(matches){
-      $scope.data = matches;
+      $scope.questions = matches;
     })
     .catch(function(error){
       console.error(error);
