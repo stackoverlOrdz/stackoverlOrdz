@@ -5,7 +5,8 @@
   "main": "server.js",
   "scripts": {
     "test": "node server",
-    "start": "app/server/server.js"
+    "start": "app/server/server.js",
+    "postinstall": "node_mdoules/bower bower install"
   },
   "engines": {
     "node": "6.2.2",
@@ -25,6 +26,7 @@
     "body": "^5.1.0",
     "body-parser": "^1.15.2",
     "bookshelf": "^0.10.0",
+    "bower": "^1.7.9",
     "chai": "^3.5.0",
     "consolidate": "^0.14.1",
     "express": "^4.14.0",
