@@ -5,17 +5,16 @@
   <h1>Let's start out with a quick survey</h1>
 
   <div id="surveyItem" ng-repeat="question in questions track by $index" ng-show="question.isCurrentQuestion">
-    <!-- <div > -->
-      <h2>{{users.caption}}</h2>
-      <img  id="surveyImg" src="{{question.image_desktop}}" height="200" width="300">
+      <h2>{{question.caption}}</h2>
+      <img id="surveyImg" src="{{question.image_desktop}}" height="200" width="300">
       <br>
-      <label class="btn btn-primary">
-        <input type="checkbox" ng-click="yes(question.id, $index)">That's me</button>
-      </label>
-      <label class="btn btn-primary">
-        <input type="checkbox" ng-click="no(question.id, $index)">Not quite</button>
-      </label>
-    <!-- </div> -->
+      <div class="btn-group" data-toggle="buttons">
+        <label class="btn btn-primary">
+          <input type="checkbox" ng-click="yes(question.id, $index)">That's me
+        </label>
+        <label class="btn btn-primary">
+          <input type="checkbox" ng-click="no(question.id, $index)">Not quite
+        </label>
+      </div>
   </div>
-  <!-- <button ng-click="addResponse()">Submit</button> -->
 </div>
