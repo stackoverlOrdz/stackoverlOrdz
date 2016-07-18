@@ -1,4 +1,4 @@
-angular.module('spark.controller', [])
+angular.module('spark.controller', ['ngAnimate', 'ui.bootstrap'])
 
 .controller('registerCtrl', function($scope, $location){
 
@@ -7,9 +7,21 @@ angular.module('spark.controller', [])
     $location.path('/takesurvey');
   }
 
+  $scope.logout = function(){
+    $scope.loading = true;
+    mainFactory.logoutRequest()
+    .then(function(matches){
+      $scope.loading = false;
+      $location.path('/register');
+    })
+    .catch(function(error){
+      console.error(error);
+    });
+  }
+
 })
 
-.controller('takesurveyCtrl', function($scope, $location, surveyFactory, mainFactory){
+.controller('takesurveyCtrl', function($scope, $location, surveyFactory, mainFactory, $rootScope){
 
   //defines get request from surveyFactory http request
   $scope.getRequest = surveyFactory.getRequest;
@@ -31,17 +43,33 @@ angular.module('spark.controller', [])
 
   $scope.matches = function(){
     //initializes the get request for the matches data from database
-    $scope.getMatches();
-    //Re-routes the view to the main
-    $location.path('/main');
+    $scope.getMatches()
+    .then(function(response){
+      $rootScope.matchesData = response;
+      $location.path('/main');
+    })  
   };
+
+  $scope.logout = function(){
+    $scope.loading = true;
+    mainFactory.logoutRequest()
+    .then(function(matches){
+      $scope.loading = false;
+      $location.path('/register');
+    })
+    .catch(function(error){
+      console.error(error);
+    });
+  }
 
 })
 
 .controller('surveyCtrl', function($scope, $location, surveyFactory, mainFactory,appData,$rootScope){
 
    //loads survey data from traitify API through surveyFactory http get request
-   $scope.data = surveyFactory.getData();
+   $scope.questions = surveyFactory.getData();
+   $scope.questions[0].isCurrentQuestion = true;
+   console.log($scope.questions);
 
    //storage for survey response data to send to traitify for anaylsis
    $scope.response = [];
@@ -49,13 +77,15 @@ angular.module('spark.controller', [])
    //storage for survey assessment results sent back from traitify API
    $scope.surveyResults = [];
 
+  //  $scope.currentQuestion = 0;
+  console.log($scope.currentQuestion);
    $scope.addResponse = function () {
     $scope.loading = true;
     surveyFactory.postRequest($scope.response)
       .then(function (matchesData) {
         $scope.loading = false;
         //UNCOMMENT TO TEST console.log('This is the matchesData', matchesData);
-          
+
         //$scope.matchesData = matchesData;
         $rootScope.matchesData = matchesData;
         //Re-routes the view to the main
@@ -63,7 +93,7 @@ angular.module('spark.controller', [])
 
         $location.path('/main');
         //$scope = appData.get('cacheScope');
-    
+
       })
       .catch(function (error) {
         console.log(error);
@@ -74,7 +104,7 @@ angular.module('spark.controller', [])
    $scope.date = Date.now();
 
    //Builds response data array for "That's me" response
-   $scope.yes = function(id){
+   $scope.yes = function(id, index){
      //Storage for response object per traitify API specs
      var obj = {}
      //Assignment of id property from ng-click this object
@@ -85,10 +115,19 @@ angular.module('spark.controller', [])
      obj.time_taken = Date.now() - $scope.date;
      //records response in $scope.response array
      $scope.response.push(obj);
+
+     $scope.questions[index].isCurrentQuestion = false;
+
+     if ($scope.questions[index + 1] === undefined) {
+       $scope.addResponse();
+     } else {
+       $scope.questions[index + 1].isCurrentQuestion = true;
+       $scope.date = Date.now();
+     }
    };
 
    //Builds response data array for "Not Quite" response
-   $scope.no = function(id){
+   $scope.no = function(id, index){
      //Storage for response object per traitify API specs
      var obj = {}
      //Assignment of id property from ng-click this object
@@ -99,6 +138,15 @@ angular.module('spark.controller', [])
      obj.time_taken = Date.now() - $scope.date;
      //records response in $scope.response array
      $scope.response.push(obj);
+
+     $scope.questions[index].isCurrentQuestion = false;
+
+     if ($scope.questions[index + 1] === undefined) {
+       $scope.addResponse();
+     } else {
+       $scope.questions[index + 1].isCurrentQuestion = true;
+       $scope.date = Date.now();
+     }
    };
 
 
@@ -106,7 +154,7 @@ angular.module('spark.controller', [])
   $scope.getRequest = function(){
     mainFactory.getRequest()
     .then(function(matches){
-      $scope.data = matches;
+      $scope.questions = matches;
     })
     .catch(function(error){
       console.error(error);
