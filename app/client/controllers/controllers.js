@@ -42,6 +42,8 @@ angular.module('spark.controller', [])
 
    //loads survey data from traitify API through surveyFactory http get request
    $scope.questions = surveyFactory.getData();
+  //  console.log($scope.questions);
+   $scope.questions[0].isCurrentQuestion = true;
 
    //storage for survey response data to send to traitify for anaylsis
    $scope.response = [];
@@ -49,6 +51,8 @@ angular.module('spark.controller', [])
    //storage for survey assessment results sent back from traitify API
    $scope.surveyResults = [];
 
+  //  $scope.currentQuestion = 0;
+  console.log($scope.currentQuestion);
    $scope.addResponse = function () {
     $scope.loading = true;
     surveyFactory.postRequest($scope.response)
@@ -85,6 +89,10 @@ angular.module('spark.controller', [])
      obj.time_taken = Date.now() - $scope.date;
      //records response in $scope.response array
      $scope.response.push(obj);
+
+     console.log($index);
+     $scope.questions[$index].isCurrentQuestion = false;
+     $scope.questions[$index + 1].isCurrentQuestion = true;
    };
 
    //Builds response data array for "Not Quite" response
@@ -99,6 +107,9 @@ angular.module('spark.controller', [])
      obj.time_taken = Date.now() - $scope.date;
      //records response in $scope.response array
      $scope.response.push(obj);
+     console.log($index);
+     $scope.questions[$index].isCurrentQuestion = false;
+     $scope.questions[$index + 1].isCurrentQuestion = true;
    };
 
 
