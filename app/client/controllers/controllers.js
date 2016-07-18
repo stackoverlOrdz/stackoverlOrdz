@@ -91,8 +91,14 @@ angular.module('spark.controller', ['ngAnimate', 'ui.bootstrap'])
      $scope.response.push(obj);
 
      console.log(index);
+
      $scope.questions[index].isCurrentQuestion = false;
-     $scope.questions[index + 1].isCurrentQuestion = true;
+
+     if ($scope.questions[index + 1] === undefined) {
+       $scope.addResponse();
+     } else {
+       $scope.questions[index + 1].isCurrentQuestion = true;
+     }
    };
 
    //Builds response data array for "Not Quite" response
@@ -109,8 +115,14 @@ angular.module('spark.controller', ['ngAnimate', 'ui.bootstrap'])
      $scope.response.push(obj);
 
      console.log(index);
+
      $scope.questions[index].isCurrentQuestion = false;
-     $scope.questions[index + 1].isCurrentQuestion = true;
+
+     if ($scope.questions[index + 1] === undefined) {
+       $scope.addResponse();
+     } else {
+       $scope.questions[index + 1].isCurrentQuestion = true;
+     }
    };
 
 
