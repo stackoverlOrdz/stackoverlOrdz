@@ -7,8 +7,8 @@
 
 <h2>We think you might like these people</h2><br>
   <div ng-repeat="match in matchesData.data">
+    <h3>  {{ match.name }}
+      {{ match.email }} </h3>
     <img  src="{{ match.picture }}" />
-          <h3>  {{ match.name }}
-            {{ match.email }} </h3>
   </div>
 </div>

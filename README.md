@@ -24,11 +24,8 @@
 
 ## Requirements
 
-- Node 0.10.x
-- Redis 2.6.x
-- Postgresql 9.1.x
-- etc
-- etc
+- Node v6.2.2
+- MongoDB 2.2.1
 
 ## Development
 
@@ -44,7 +41,7 @@ bower install
 
 ### Roadmap
 
-View the project roadmap [here](roadmap.md)
+View the project roadmap [here](https://github.com/stackoverlOrdz/stackoverlOrdz/blob/development/ROADMAP.md)
 
 
 ## Contributing
