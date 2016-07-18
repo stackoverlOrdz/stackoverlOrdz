@@ -44,9 +44,8 @@ var queryMatches = function(currentUser, deck, cb) {
     var cursor = UserModel.User.find().where().cursor();
     cursor.on('data', function(user) {
         compareArray = user.testObject.core.compareArray;
-        var greatestDifference = 0,
-            difference, matches = [];
-        console.log('+++line 63  compareArray', user, compareArray)
+        var greatestDifference = 0, difference;
+        console.log('+++line 63  compareArray',compareArray)
             //find greatest difference between user scores
 
         for (var i = 0; i < compareArray.length; i++) {
@@ -56,31 +55,35 @@ var queryMatches = function(currentUser, deck, cb) {
             }
         }
         //add each user's profile and their difference score to the matches object
-
+  if (user.facebookObject.facebookId !== currentUser.facebookObject.facebookId){
         matches.push({
                 greatestDifference: greatestDifference,
                 facebookObject: user.facebookObject
             })
-        console.log('+++line 63 matches', matches)
+      }
     })
     cursor.on('close', function() {
-        })
+//console.log('++cursor closed matches', matches)
+      
+    //console.log('+++line 63 matches', matches)
         //sort the matches objet and return
-    var resultsArray = _.orderBy(matches, ['greatestDifference', 'facebookObject'], ['desc'])
+    var resultsArray = _.orderBy(matches, ['greatestDifference', 'facebookObject'], ['asc'])
         // returns → objects for [[36, fbobj], [34, fbobj]]
-    console.log('+++resultsArray of greatestDiff line 81', resultsArray)
+ //   console.log('+++resultsArray of greatestDiff line 81', resultsArray)
+    resultsArray = _.map(resultsArray, 'facebookObject')
         //return  {currentUser:{fbObj},data: [ fbObj , fbObj , fbObj ] }
     var matchesObject = {
         'currentUser': currentUser.facebookObject,
-        'data': null
+        'data': resultsArray
     }
-    matches = []
-    for (var i = 0; i < resultsArray.length; i++) {
-        matches.push(resultsArray[i][1])
-    }
-    matchesObject.data = matches;
-    console.log('+++matchesObject of greatestDiff line 92', matchesObject)
+    // matches = []
+    // for (var i = 0; i < resultsArray.length; i++) {
+    //     matches.push(resultsArray[i][1])
+    // }
+   // matchesObject.data = matches;
+ //   console.log('+++matchesObject of greatestDiff line 92', matchesObject)
     cb(matchesObject)
+  })
 }
 
 var createCompareArray = function(testResults) {
