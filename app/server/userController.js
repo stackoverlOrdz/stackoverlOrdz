@@ -5,7 +5,7 @@ var mongoose = require('mongoose');
 var _ = require('lodash')
 
 var currentUser;
-
+var saveCurrentUser;
 //add new user with facebook login data to the db Users to create a new user.
 //this is our login method and adds a unique id, username, picture, email, birthday and location within the user's facebookObject
 //test user test has results
@@ -35,6 +35,7 @@ var signup = function(facebookObject, cb) {
 var queryMatches = function(currentUser, deck, cb) {
   if(!currentUser || currentUser === undefined){
     currentUser = saveCurrentUser;
+    console.log('+++line 38 curUser', currentUser)
   }
     var currentUserScores = currentUser.testObject.core.compareArray;
     console.log('+++query matches 51', currentUserScores)
@@ -143,7 +144,7 @@ var addTestData = function(currentUser, deck, testResults, cb) {
         });
         cb('ok')
 }
-var saveCurrentUser;
+
 var getUserStatus = function(facebookObject, cb) {
     UserModel.User.findOne({
             'facebookObject.facebookId': facebookObject.facebookId

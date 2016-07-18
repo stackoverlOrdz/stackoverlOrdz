@@ -1,9 +1,15 @@
 <div ng-controller='takesurveyCtrl'>
 
+  <button ng-click="logout()">Logout</button>
+
   <h2 id="subHeader">Now that that's out of the way!</h1>
 
-  <button ng-click="survey()">Let's take that survey</button>
-
-  <button ng-click="matches()">Been there, done that</button>
-
+  <div class="btn-group" data-toggle="buttons">
+    <label class="btn btn-primary">
+      <input type="checkbox" ng-click="survey()">Let's take that survey
+    </label>
+    <label class="btn btn-primary">
+      <input type="checkbox" ng-click="matches()">Been there, done that
+    </label>
+  <div>
 </div>
