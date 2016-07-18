@@ -6,7 +6,7 @@
   "scripts": {
     "test": "node server",
     "start": "app/server/server.js",
-    "postinstall": "node_mdoules/bower bower install"
+    "postinstall": "node_modules/bower bower install"
   },
   "engines": {
     "node": "6.2.2",
