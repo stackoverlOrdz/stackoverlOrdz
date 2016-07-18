@@ -90,14 +90,13 @@ angular.module('spark.controller', ['ngAnimate', 'ui.bootstrap'])
      //records response in $scope.response array
      $scope.response.push(obj);
 
-     console.log(index);
-
      $scope.questions[index].isCurrentQuestion = false;
 
      if ($scope.questions[index + 1] === undefined) {
        $scope.addResponse();
      } else {
        $scope.questions[index + 1].isCurrentQuestion = true;
+       $scope.date = Date.now();
      }
    };
 
@@ -114,14 +113,13 @@ angular.module('spark.controller', ['ngAnimate', 'ui.bootstrap'])
      //records response in $scope.response array
      $scope.response.push(obj);
 
-     console.log(index);
-
      $scope.questions[index].isCurrentQuestion = false;
 
      if ($scope.questions[index + 1] === undefined) {
        $scope.addResponse();
      } else {
        $scope.questions[index + 1].isCurrentQuestion = true;
+       $scope.date = Date.now();
      }
    };
 
