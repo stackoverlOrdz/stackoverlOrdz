@@ -1,5 +1,7 @@
 angular.module('spark.factory', [])
 
+
+
 .factory('surveyFactory', function ($http) {
 
   //storage for survey data received from Facebook API
@@ -24,11 +26,11 @@ angular.module('spark.factory', [])
   }
 
   //storage for currentUser data received as response from Facebook API
-  var postData = [];
+  var matchesPostData = [];
 
   //helper function to inject survey data received from Facebook API into mainCtrl
   var postData = function(){
-    return postData;
+    return matchesPostData;
   }
 
   //http post request to Facebook API for currentUser data
@@ -41,8 +43,9 @@ angular.module('spark.factory', [])
         headers: {'Content-Type': 'application/json'}
     }).then(function successCallback(response) {
         console.log('made a successful post', response.data);
-        postData = response.data;
+        matchesPostData = response.data;
         return response.data;
+
       }, function errorCallback(response) {
         console.log("Get request error!");
       });
@@ -86,3 +89,20 @@ angular.module('spark.factory', [])
     logoutRequest: logoutRequest
   }
 })
+.factory('appData', [function(){
+  var cache = {};
+  return { 
+     set:function(location, payload){
+       cache[location]=payload
+     },
+     get:function(location){
+       return cache[location];
+
+     },
+     clear:function(){
+       cache={}
+     }
+   }
+}])
+
+
