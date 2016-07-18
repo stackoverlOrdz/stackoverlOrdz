@@ -4,9 +4,9 @@
 
   <h1>Let's start out with a quick survey</h1>
 
-  <div id="surveyItem" ng-repeat="question in questions track by $index" ng-show="question.isCurrentQuestion">
+  <div class="surveyItem" ng-repeat="question in questions track by $index" ng-show="question.isCurrentQuestion">
       <h2>{{question.caption}}</h2>
-      <img id="surveyImg" src="{{question.image_desktop}}" height="200" width="300">
+      <img class="surveyImg" src="{{question.image_desktop}}" height="200" width="300">
       <br>
       <div class="btn-group" data-toggle="buttons">
         <label class="btn btn-primary">
