@@ -71,8 +71,9 @@ angular.module('spark.controller', ['ngAnimate', 'ui.bootstrap'])
   $scope.questions = surveyFactory.getData();
 
   //Assigns default of true to initial surevy question
+  if($scope.questions[0] !== undefined){
   $scope.questions[0].isCurrentQuestion = true;
-
+}
   //storage for survey response data to send to traitify for anaylsis
   $scope.response = [];
 
