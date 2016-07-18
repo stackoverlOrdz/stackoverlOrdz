@@ -7,6 +7,18 @@ angular.module('spark.controller', ['ngAnimate', 'ui.bootstrap'])
     $location.path('/takesurvey');
   }
 
+  $scope.logout = function(){
+    $scope.loading = true;
+    mainFactory.logoutRequest()
+    .then(function(matches){
+      $scope.loading = false;
+      $location.path('/register');
+    })
+    .catch(function(error){
+      console.error(error);
+    });
+  }
+
 })
 
 .controller('takesurveyCtrl', function($scope, $location, surveyFactory, mainFactory, $rootScope){
@@ -37,6 +49,18 @@ angular.module('spark.controller', ['ngAnimate', 'ui.bootstrap'])
       $location.path('/main');
     })  
   };
+
+  $scope.logout = function(){
+    $scope.loading = true;
+    mainFactory.logoutRequest()
+    .then(function(matches){
+      $scope.loading = false;
+      $location.path('/register');
+    })
+    .catch(function(error){
+      console.error(error);
+    });
+  }
 
 })
 
