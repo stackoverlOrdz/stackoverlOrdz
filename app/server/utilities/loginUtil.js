@@ -28,7 +28,12 @@ var getSurvey = function(callback){
               });
         })
 }
-
+var getMatches = function(callback){
+    userController.queryMatches(currentUser, 'core', function(response){
+    console.log('+++matchesDtaa line 109', response)
+    callback(response)
+  })
+}
 var getResults = function(testResponses,callback){
   var traitifyResults;
   traitifyAPICalls.testSubmitResults(assessmentId, "core", testResponses, function (){
@@ -57,21 +62,10 @@ var processFacebookData = function(facebookInfo) {
 };
 
 module.exports = {
+  getMatches:getMatches,
   getResults:getResults,
   processFacebookData:processFacebookData,
   loginUser:loginUser,
   getSurvey:getSurvey
 }
 
-/// test functions for database queries
-// function returnNewUser(cb) {
-//   cb({newUser: true});
-// }
-//
-// function returnExistingUserUnfinishedSurvey(cb) {
-//   cb({existingUserUnfinishedSurvey: null});
-// }
-
-// function returnExistingUserSurveyComplete(cb) {
-//   cb({existingUserSurveyComplete: "matches"})
-// }

@@ -42,7 +42,7 @@ angular.module('spark.factory', [])
         data: JSON.stringify(data),
         headers: {'Content-Type': 'application/json'}
     }).then(function successCallback(response) {
-        console.log('made a successful post', response.data);
+       // console.log('made a successful post', response.data);
         matchesPostData = response.data;
         return response.data;
 

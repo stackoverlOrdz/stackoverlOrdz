@@ -43,21 +43,14 @@ app.use(bodyParser.json())
 app.use(passport.initialize());
 app.use(passport.session());
 
-// app.use(function(req, res, next) {
-//   res.header("Access-Control-Allow-Origin", "*");
-//   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-//   next();
-// });
-
-
 /*
 
 //facebook object currently receiving..not getting location, birthday
-{ id: '10153929891029332',
-  name: 'Rebecca Gray',
-  picture: 'https://scontent.xx.fbcdn.net/v/t1.0-1/p200x200/12742343_10153578598784332_5479975309254932247_n.jpg?oh=add386259087036d59d52ae84416b0c1&oe=5821B128',
+{ id: 'xxxxx',
+  name: 'Jane Doe',
+  picture: 'https://scontent.xx.fbcdn.net/v/t1.0-1/p200x200/xxx.jpg?oh=xxxx&oe=5821B128',
   email: 'example@gmail.com',
-  link: 'https://www.facebook.com/app_scoped_user_id/10153929891029332/' }
+  link: 'https://www.facebook.com/app_scoped_user_id/xxxx/' }
   */
 
 
@@ -68,7 +61,6 @@ passport.use(new FacebookStrategy({
     profileFields: ['id', 'displayName', 'picture.type(large)', 'email', 'birthday', 'profileUrl', 'location', 'verified']
   },
   function(accessToken, refreshToken, profile, done) {
-    console.log('in passport use',accessToken, refreshToken, profile)
     done(null, profile);
   }
 ));
@@ -81,17 +73,13 @@ app.get('/auth/facebook/callback',
   passport.authenticate('facebook', { failureRedirect: '/login' }),
   function(req, res) {
     var facebookData = loginUtil.processFacebookData(req.user._json);
-    console.log('+++ loginToFacebook')
     loginUtil.loginUser(facebookData, function(response) {
-          // responseObject = response;
-           console.log(response)
           res.redirect('/takesurvey')
       })
   });
 
 
 app.get('/login', function(req, res){
-  console.log('+++ get login')
    res.redirect('/auth/facebook');
 
  });
@@ -104,15 +92,15 @@ app.get('/loadSurvey', function(req, res){
 
 app.get('/loadMatches', function(req, res){
   //create main view for matches
-  res.send(loginUtil.matchesData)
+  loginUtil.getMatches(function(response){
+    res.send(response)
+  });
 })
 
 app.post('/sendSurvey', function(req, res) {
-    console.log("Got response: " + req.body);
  //this is the submission of the survey to traitify
   var testResponses = req.body
   loginUtil.getResults(testResponses, function(matchesObject){
-    console.log('++++resp getResults', matchesObject)
     res.status(200).json(matchesObject)
   })
  });
