@@ -93,15 +93,15 @@ app.get('/loadSurvey', function(req, res){
 app.get('/loadMatches', function(req, res){
   //create main view for matches
   loginUtil.getMatches(function(response){
-    res.send(response)
+    res.send(response);
   });
 })
 
 app.post('/sendSurvey', function(req, res) {
  //this is the submission of the survey to traitify
-  var testResponses = req.body
+  var testResponses = req.body;
   loginUtil.getResults(testResponses, function(matchesObject){
-    res.status(200).json(matchesObject)
+    res.status(200).json(matchesObject);
   })
  });
 
