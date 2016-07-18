@@ -1,5 +1,7 @@
 <div ng-controller="surveyCtrl">
 
+  <button ng-click="logout()">Logout</button>
+
   <h1>Let's start out with a quick survey</h1>
 
   <div id="surveyItem" ng-repeat="question in questions track by $index" ng-show="question.isCurrentQuestion">
