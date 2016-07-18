@@ -33,19 +33,19 @@ var signup = function(facebookObject, cb) {
 }
 
 var queryMatches = function(currentUser, deck, cb) {
+  if(!currentUser || currentUser === undefined){
+    currentUser = saveCurrentUser;
+  }
     var currentUserScores = currentUser.testObject.core.compareArray;
-    console.log('+++query matches 51', currentUser, deck, currentUserScores)
+    console.log('+++query matches 51', currentUserScores)
     var matches = []
 
     //for each user in db with test deck core
-    var cursor = UserModel.User.find().where({
-        testObject: 'core'
-    }).cursor();
+    var cursor = UserModel.User.find().where().cursor();
     cursor.on('data', function(user) {
         compareArray = user.testObject.core.compareArray;
-        var greatestDifference = 0,
-            difference, matches = [];
-        console.log('+++line 63  compareArray', compareArray)
+        var greatestDifference = 0, difference;
+        console.log('+++line 63  compareArray',compareArray)
             //find greatest difference between user scores
 
         for (var i = 0; i < compareArray.length; i++) {
@@ -55,30 +55,35 @@ var queryMatches = function(currentUser, deck, cb) {
             }
         }
         //add each user's profile and their difference score to the matches object
-
+  if (user.facebookObject.facebookId !== currentUser.facebookObject.facebookId){
         matches.push({
                 greatestDifference: greatestDifference,
                 facebookObject: user.facebookObject
             })
+      }
     })
     cursor.on('close', function() {
-        })
+//console.log('++cursor closed matches', matches)
+      
+    //console.log('+++line 63 matches', matches)
         //sort the matches objet and return
-    var resultsArray = _.orderBy(matches, ['greatestDifference', 'facebookObject'], ['desc'])
+    var resultsArray = _.orderBy(matches, ['greatestDifference', 'facebookObject'], ['asc'])
         // returns → objects for [[36, fbobj], [34, fbobj]]
-    console.log('+++resultsArray of greatestDiff line 81', resultsArray)
+ //   console.log('+++resultsArray of greatestDiff line 81', resultsArray)
+    resultsArray = _.map(resultsArray, 'facebookObject')
         //return  {currentUser:{fbObj},data: [ fbObj , fbObj , fbObj ] }
     var matchesObject = {
         'currentUser': currentUser.facebookObject,
-        'data': null
+        'data': resultsArray
     }
-    matches = []
-    for (var i = 0; i < resultsArray.length; i++) {
-        matches.push(resultsArray[i][1])
-    }
-    matchesObject.data = matches;
-    console.log('+++matchesObject of greatestDiff line 92', matchesObject)
+    // matches = []
+    // for (var i = 0; i < resultsArray.length; i++) {
+    //     matches.push(resultsArray[i][1])
+    // }
+   // matchesObject.data = matches;
+ //   console.log('+++matchesObject of greatestDiff line 92', matchesObject)
     cb(matchesObject)
+  })
 }
 
 var createCompareArray = function(testResults) {
@@ -112,16 +117,18 @@ var createCompareArray = function(testResults) {
 
 
 var addTestData = function(currentUser, deck, testResults, cb) {
-  if (!testResults){
-      console.log('no test resuts')
-      cb('error getting test results from API')
-  }
+        if (!testResults){
+            console.log('no test resuts')
+            cb('error getting test results from API')
+        }
         //create compareArray for matching users
         var compareArray = createCompareArray(testResults)
         console.log('++++compareArray', compareArray)
-        //no currentuser here??
-        //console.log('++line 127 addTestdata curruser', currentUser)
-        //console.log('++line 127 addTestdata curruser._id', currentUser._id)
+        if(!currentUser|| currentUser === undefined){
+             currentUser = saveCurrentUser;
+        }
+        console.log('++line 127 addTestdata curruser', currentUser)
+        console.log('++line 127 addTestdata curruser._id', currentUser._id)
 
         UserModel.User.findById(currentUser._id, function(err, user) {
             user.testObject.core.testResults = testResults;
@@ -136,7 +143,7 @@ var addTestData = function(currentUser, deck, testResults, cb) {
         });
         cb('ok')
 }
-
+var saveCurrentUser;
 var getUserStatus = function(facebookObject, cb) {
     UserModel.User.findOne({
             'facebookObject.facebookId': facebookObject.facebookId
@@ -148,13 +155,15 @@ var getUserStatus = function(facebookObject, cb) {
                 signup(facebookObject, function(err, res) {
                     console.log('++++ signup complete')
                     currentUser = res;
+                   var  saveCurrentUser = currentUser;
                     cb({
                         'newUser': true, 'currentUser': res
                     })
                 })
             } else {
                 console.log('+++ using otherwise route', currentUser)
-                currentUser = currentUser;
+                //currentUser = currentUser;
+                var  saveCurrentUser = currentUser;
                     //exitingUserUnfinishedSurvey
                 cb({
                     'newUser': false, 'currentUser':currentUser
@@ -163,6 +172,7 @@ var getUserStatus = function(facebookObject, cb) {
         })
 }
 module.exports = {
+  saveCurrentUser:saveCurrentUser,
     currentUser:currentUser,
     queryMatches: queryMatches,
     currentUser: currentUser,

@@ -1,24 +1,32 @@
 <div ng-controller="mainCtrl">
 
-  <p>{{data}}</p>
+  <button ng-click="logout()">Logout</button>
 
-  <h2>Hey {{ data.currentUser.name }}!</h2>
+  <h2>Hey  {{data.currentUser.name}}</h2><br><br>
 
-  <div ng-repeat="match in data.matches">
-    <img src="{{ match.picture }}" />
+<h2>We think you might like these people</h2><br>
+ 
+  <div ng-repeat="match in data.data">
+    <!-- {{match}} -->
+    <img  src="{{ match.picture }}" />
+    
+    <!-- <div  class="info"> -->
+        <!-- <div class="name"> -->
+          <h3>  {{ match.name }} 
+            {{ match.email }} </h3>
+        <!-- </div> -->
+    <!-- </div> -->
+   
+  </div>
+
+  <!-- <h2>We think you match best with{{ data.currentUser.name }}!</h2> -->
+
+  <!-- <div ng-repeat="match in data">
+    <img src="{{ match.currentUser.picture }}" />
     <div class="info">
         <div class="name">
-            {{ match.name }}
-        </div>
-        <div class="email">
-            {{ match.email }}
-        </div>
-        <div class="birthday">
-            {{ match.birthday }}
-        </div>
-        <div class="link">
-          {{ match.link }}
+            {{ match.currentUser.name }}
         </div>
     </div>
-  </div>
+  </div> -->
 </div>
