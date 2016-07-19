@@ -11,7 +11,13 @@ ul, li {
   margin: 0 auto;
   padding: 0;
 }
-
+.matchDiv {
+  width: 40%;
+}
+.matchImg {
+  width:30%;
+  padding:2%;
+}
 #mainHeader {
   color: grey;
   font-size: 80px;
