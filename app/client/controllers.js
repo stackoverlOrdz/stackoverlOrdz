@@ -2,20 +2,19 @@ angular.module('spark.controller', ['ngAnimate', 'ui.bootstrap'])
 
 .controller('registerCtrl', function($scope, $location){
 
-  $scope.load = function(){
-    //re-routes to takesurvey view upon login button click
+  $scope.login = function(){
     $location.path('/takesurvey');
   }
 
   $scope.logout = function(){
     $scope.loading = true;
     mainFactory.logoutRequest()
-    .then(function(matches){
+    .then(function(){
       $scope.loading = false;
       $location.path('/register');
     })
     .catch(function(error){
-      console.error(error);
+      console.error('++++ line 17 controllers.js ERROR! ', error);
     });
   }
 
@@ -44,59 +43,54 @@ angular.module('spark.controller', ['ngAnimate', 'ui.bootstrap'])
   $scope.matches = function(){
     //initializes the get request for the matches data from database
     $scope.getMatches()
+    //async promise to reassign matchesData to local scope from database query
     .then(function(response){
       $rootScope.matchesData = response;
       $location.path('/main');
-    })  
+    })
   };
 
   $scope.logout = function(){
     $scope.loading = true;
     mainFactory.logoutRequest()
-    .then(function(matches){
+    .then(function(){
       $scope.loading = false;
       $location.path('/register');
     })
     .catch(function(error){
-      console.error(error);
+      console.error('++++ line 60 controllers.js ERROR! ', error);
     });
   }
 
 })
 
-.controller('surveyCtrl', function($scope, $location, surveyFactory, mainFactory,appData,$rootScope){
+.controller('surveyCtrl', function($scope, $location, surveyFactory, mainFactory, $rootScope){
 
-   //loads survey data from traitify API through surveyFactory http get request
-   $scope.questions = surveyFactory.getData();
-   $scope.questions[0].isCurrentQuestion = true;
-   console.log($scope.questions);
+  //loads survey data from traitify API through surveyFactory http get request
+  //UNCOMMENT TO TEST console.log(++++line 69 controllers.js SUVERY QUESTIONS ARRAY, $scope.questions);
+  $scope.questions = surveyFactory.getData();
 
-   //storage for survey response data to send to traitify for anaylsis
-   $scope.response = [];
+  //Assigns default of true to initial surevy question
+  if($scope.questions[0] !== undefined){
+  $scope.questions[0].isCurrentQuestion = true;
+}
+  //storage for survey response data to send to traitify for anaylsis
+  $scope.response = [];
 
-   //storage for survey assessment results sent back from traitify API
-   $scope.surveyResults = [];
+  //storage for survey assessment results sent back from traitify API
+  $scope.surveyResults = [];
 
-  //  $scope.currentQuestion = 0;
-  console.log($scope.currentQuestion);
    $scope.addResponse = function () {
     $scope.loading = true;
     surveyFactory.postRequest($scope.response)
       .then(function (matchesData) {
         $scope.loading = false;
-        //UNCOMMENT TO TEST console.log('This is the matchesData', matchesData);
-
-        //$scope.matchesData = matchesData;
+        //UNCOMMENT TO TEST console.log('++++line 88 controllers.js This is the matchesData', matchesData);
         $rootScope.matchesData = matchesData;
-        //Re-routes the view to the main
-        //appData.set('cacheScope', $scope);
-
         $location.path('/main');
-        //$scope = appData.get('cacheScope');
-
       })
       .catch(function (error) {
-        console.log(error);
+        console.error('++++ line 92 controllers.js ERROR! ', error);
       });
    };
 
@@ -149,27 +143,25 @@ angular.module('spark.controller', ['ngAnimate', 'ui.bootstrap'])
      }
    };
 
-
-
   $scope.getRequest = function(){
     mainFactory.getRequest()
     .then(function(matches){
       $scope.questions = matches;
     })
     .catch(function(error){
-      console.error(error);
+      console.error('++++ line 151 controllers.js ERROR! ', error);
     });
   };
 
   $scope.logout = function(){
     $scope.loading = true;
     mainFactory.logoutRequest()
-    .then(function(matches){
+    .then(function(){
       $scope.loading = false;
       $location.path('/register');
     })
     .catch(function(error){
-      console.error(error);
+      console.error('++++ line 163 controllers.js ERROR! ', error);
     });
   }
 });
