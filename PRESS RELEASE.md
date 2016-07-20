@@ -20,7 +20,7 @@
   "Things are bound to ignite when sparks fly!"
 
 ## How to Get Started ##
-  Find us at https://polar-springs-51265.herokuapp.com
+  Find us at https://sparksocialnetworking.herokuapp.com
 
 ## Customer Quote ##
  I was extremely pleased with Spark. It's comprehensive personality analyltics have inproved the quality of my social network! I would recommed them to anyone!

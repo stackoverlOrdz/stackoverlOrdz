@@ -45,7 +45,7 @@ angular.module('spark.factory', [])
         return response.data;
 
       }, function errorCallback(response) {
-        console.log("Get request error!");
+        console.log("++++line 48 services Post request error!", response);
       });
   }
 
