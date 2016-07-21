@@ -1,5 +1,5 @@
 var userController = require('../userController.js');
-var traitifyAPICalls = require('./traitifyUtils/traitifyAPICalls.js');
+var traitifyUtil = require('./traitifyUtil.js');
 
 var currentUser;
 var loginUser = function(facebookData, callback) {
@@ -15,10 +15,10 @@ var assessmentId;
 var getSurvey = function(callback){
   // create new 'core' survey and then retrieve it
   var surveyInfo;
-  traitifyAPICalls.createAssessment('core', function(surveyInfo) {
+  traitifyUtil.createAssessment('core', function(surveyInfo) {
     assessmentId = JSON.parse(surveyInfo).id;
     surveyInfo = surveyInfo;
-    traitifyAPICalls.getAssessment(JSON.parse(surveyInfo).id, function(survey) {
+    traitifyUtil.getAssessment(JSON.parse(surveyInfo).id, function(survey) {
       // surveyData = survey
       //  responseObject.data = surveyData
 
@@ -37,8 +37,8 @@ var getMatches = function(callback){
 
 var getResults = function(testResponses,callback){
   var traitifyResults;
-  traitifyAPICalls.testSubmitResults(assessmentId, "core", testResponses, function (){
-    traitifyAPICalls.getResults( assessmentId, function(traitifyResults){
+  traitifyUtil.testSubmitResults(assessmentId, "core", testResponses, function (){
+    traitifyUtil.getResults( assessmentId, function(traitifyResults){
       userController.addTestData(currentUser,'core', traitifyResults, function(response){
         userController.queryMatches(currentUser,traitifyResults, function(response){
           //matches.data = response;

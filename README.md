@@ -36,7 +36,7 @@
 
 ### Traitify Developer Profile
 
-1. Go to https://developer.traitify.com/ and signup for a developer account. Set your public key as the value of all of the 'Authorization' keys in traitifyAPICalls.js.
+1. Go to https://developer.traitify.com/ and signup for a developer account. Set your public key as the value of all of the 'Authorization' keys in traitifyUtil.js.
 
 ## Development
 
